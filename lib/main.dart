@@ -1,11 +1,11 @@
 import 'package:cinema/accueil.dart';
 import 'package:cinema/calendrier.dart';
-import 'package:cinema/login/login.dart';
+//import 'package:cinema/login/login.dart';
 import 'package:cinema/profil.dart';
 import 'package:cinema/tickets.dart';
 import 'package:flutter/material.dart';
 
-import 'categories/movies.dart';
+//import 'categories/movies.dart';
 
 void main() {
   runApp(
@@ -24,7 +24,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  int _pageIndex = 0;
+  //int _pageIndex = 0;
 
   final List<Widget> pages = [
     Accueil(),
@@ -127,7 +127,8 @@ class HomePageState extends State<HomePage> {
   List<IconData> listOfIcons = [
     Icons.movie_filter,
     Icons.calendar_month_sharp,
-    Icons.qr_code_2,
+    //Icons.qr_code_2,
+    Icons.confirmation_number_sharp,
     Icons.person_rounded
   ];
 }

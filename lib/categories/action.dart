@@ -65,7 +65,7 @@ class _FilmsState extends State<Films> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        child: Container(
+                        /*child: Container(
                           // Code pour le nombre de photo.
                           width: 38,
                           margin:
@@ -87,7 +87,7 @@ class _FilmsState extends State<Films> {
                               ),
                             ],
                           ),
-                        ),
+                        ),*/
                         alignment: Alignment.bottomRight,
                       ),
                     ),

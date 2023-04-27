@@ -1,16 +1,26 @@
-import 'package:cinema/accueil.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/models/Product.dart';
 import 'package:cinema/details/produit_detail.dart';
 
+import 'code.dart';
 import 'categories/movies.dart';
 
 class Calendar extends StatefulWidget {
+  List<String> _items = [
+    'Tous',
+    'Canal Olympia Ouaga 2000',
+    'Canal Olympia Pissy',
+    'Ciné Burkina',
+    'Ciné Nerwaya',
+  ];
+
   @override
   State<Calendar> createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> {
+  String _selectedItem = 'Tous';
+  DateTime _selectedDate = DateTime.now();
   List<Container> movieOscar = [];
 
   buildList() async {
@@ -87,30 +97,6 @@ class _CalendarState extends State<Calendar> {
     buildList();
   }
 
-  final commentaireController = TextEditingController();
-  List<String> ListCategories = [
-    "00",
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-  ];
-  final List<Widget> _tabList = [
-    Accueil(),
-    Accueil(),
-    Accueil(),
-    Accueil(),
-    Accueil(),
-    Accueil(),
-    Accueil(),
-    Accueil(),
-    Accueil(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -142,45 +128,82 @@ class _CalendarState extends State<Calendar> {
           body: Stack(children: [
             ListView(
               children: [
-                const SizedBox(height: 10.0),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (int i = 1; i < 9; i++)
-                        // for(int j=1; j<6; j++)
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          padding:
-                              EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(.30),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: InkWell(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                return _tabList[i];
-                              }));
-                            },
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    height: 70.0,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 7,
+                      itemBuilder: (BuildContext context, int index) {
+                        DateTime date =
+                            DateTime.now().add(Duration(days: index));
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedDate = date;
+                            });
+                          },
+                          child: Container(
+                            width: 70.0,
+                            margin: EdgeInsets.only(right: 10.0),
+                            decoration: BoxDecoration(
+                              color: _selectedDate.day == date.day
+                                  ? Colors.blue
+                                  : Color.fromARGB(255, 220, 219, 219),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.calendar_month_sharp),
                                 Text(
-                                  ListCategories[i],
+                                  '${date.day}',
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                )
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 5.0),
+                                Text(
+                                  '${_getWeekday(date.weekday)}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
                               ],
                             ),
                           ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                /*ListTile(
+                  leading: Icon(Icons.calendar_month, color: Colors.black),
+                  title:
+                      Text('DateTime', style: TextStyle(color: Colors.black)),
+                  onTap: () {
+                    // Do something
+                    setState(() {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return CalendarPage();
+                      }));
+                    });
+                  },
+                ),*/
+                Container(
+                  //Codde pour le Dropdown pour filtrer les films en fonction des salles de cinéma
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          size: 35,
                         ),
+                        onPressed: () {
+                          _showDropdown(context);
+                        },
+                      ),
+                      const SizedBox(width: 10.0),
+                      Text(_selectedItem),
                     ],
                   ),
                 ),
@@ -188,7 +211,7 @@ class _CalendarState extends State<Calendar> {
                   //padding: const EdgeInsets.only(right: 17.0),
                   margin: const EdgeInsets.all(10.0),
                   width: MediaQuery.of(context).size.width - 20.0,
-               //   height: MediaQuery.of(context).size.height - 50.0,
+                  //   height: MediaQuery.of(context).size.height - 50.0,
                   child: ListView(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -196,10 +219,62 @@ class _CalendarState extends State<Calendar> {
                     children: movieOscar,
                   ),
                 ),
-    
               ],
             )
           ])),
+    );
+  }
+
+  // Récupérer le jour de la semaine à partir de l'indice
+  String _getWeekday(int weekday) {
+    switch (weekday) {
+      case 1:
+        return 'Lun';
+      case 2:
+        return 'Mar';
+      case 3:
+        return 'Mer';
+      case 4:
+        return 'Jeu';
+      case 5:
+        return 'Ven';
+      case 6:
+        return 'Sam';
+      case 7:
+        return 'Dim';
+      default:
+        return "Invalid day";
+    }
+  }
+
+  void _showDropdown(BuildContext context) {
+    //Fonction pour le dropdown des salles de cinéma 
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget._items.length,
+              itemBuilder: (BuildContext context, int index) {
+                String item = widget._items[index];
+                return ListTile(
+                  title: Text(item),
+                  onTap: () {
+                    setState(() {
+                      _selectedItem = item;
+                    });
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

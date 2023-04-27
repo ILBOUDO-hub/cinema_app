@@ -69,42 +69,64 @@ class ProduitDetail extends StatelessWidget {
         // page view
 
         Container(
-          color: Colors.white,
-         // height: 300,
-          width: 150,
+          padding: EdgeInsets.all(30),
+          color: Colors.blueAccent,
+          // height: 300,
+          //width: 150,
           child: Image.asset(assetPath1, fit: BoxFit.cover),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-                padding: const EdgeInsets.only(right: 20, left: 20),
-                child: Text(
-                  "$cookiename",
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                      fontFamily: 'Varela',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: Color.fromARGB(255, 83, 83, 83)),
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.play_circle_rounded,
-                    size: 22,
-                  ),
-                  onPressed: () {
-                    //for (var i = 0; i < gateau.length; i++) {
-                     // final gleinfo = gateau[i];
-                     //Code pour récupérer le trailler du film correspondant
+        Container(
+          padding: const EdgeInsets.only(right: 20, left: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  // padding: const EdgeInsets.only(right: 20, left: 20),
+                  child: Text(
+                "$cookiename",
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                    fontFamily: 'Varela',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                    color: Color.fromARGB(255, 83, 83, 83)),
+              )),
+              Container(
+                //padding: const EdgeInsets.only(left: 70),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.star,
+                        size: 28,
+                        color: Colors.yellow,
+                      ),
+                      onPressed: () {},
+                    ),
+                    const Text(
+                      "3.4k",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+              )
+              /*Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.play_circle_rounded,
+                      size: 22,
+                    ),
+                    onPressed: () {
+                      //for (var i = 0; i < gateau.length; i++) {
+                      // final gleinfo = gateau[i];
+                      //Code pour récupérer le trailler du film correspondant
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => PlayerDetail(
                                 assetPath1: assetPath1,
@@ -114,33 +136,74 @@ class ProduitDetail extends StatelessWidget {
                                 cookiecategorie: cookiecategorie,
                                 //isFavorite: gleinfo.isFavorite,
                               )));
-                  //  }
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.favorite,
-                    size: 22,
+                      //  }
+                    },
                   ),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.location_on_sharp,
-                    size: 22,
+                  IconButton(
+                    icon: const Icon(
+                      Icons.favorite,
+                      size: 22,
+                    ),
+                    onPressed: () {},
                   ),
-                  onPressed: () {},
-                ),
-              ],
-            )
-          ],
+                  IconButton(
+                    icon: const Icon(
+                      Icons.location_on_sharp,
+                      size: 22,
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              )*/
+            ],
+          ),
         ),
 
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
-
-        Padding(
+        Container(
+          // padding: const EdgeInsets.only(left: 20),
+          child: Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.location_on_sharp,
+                      size: 22,
+                    ),
+                    onPressed: () {},
+                  ),
+                  Text(cookieauteur,
+                      style: const TextStyle(
+                          fontFamily: 'Varela',
+                          fontSize: 14.0,
+                          color: Colors.black))
+                ],
+              ),
+              //  SizedBox(width: 15,),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.calendar_month_sharp,
+                      size: 22,
+                    ),
+                    onPressed: () {},
+                  ),
+                  const Text("Novembre 10, 2023",
+                      style: TextStyle(
+                          fontFamily: 'Varela',
+                          fontSize: 14.0,
+                          color: Colors.black))
+                ],
+              ),
+            ],
+          ),
+        ),
+        /*Padding(
           padding: const EdgeInsets.only(right: 20, left: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -192,7 +255,7 @@ class ProduitDetail extends StatelessWidget {
               )
             ],
           ),
-        ),
+        ),*/
 
         /* Container(
            padding: const EdgeInsets.only(right: 20, left: 20),
@@ -255,16 +318,60 @@ class ProduitDetail extends StatelessWidget {
 
         const SizedBox(height: 10.0),
 
-        Container(
-          padding: const EdgeInsets.only(right: 20, left: 20),
-          width: MediaQuery.of(context).size.width - 50.0,
-          child: const Text("Synopsis",
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                  fontFamily: 'Varela',
-                  fontSize: 22.0,
+        Padding(
+          padding: const EdgeInsets.only(right:20.0, left: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+               // padding: const EdgeInsets.only(right: 20, left: 20),
+               // width: MediaQuery.of(context).size.width - 50.0,
+                child: const Text("Synopsis",
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                        fontFamily: 'Varela',
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+              ),
+                        FloatingActionButton.extended(
+              heroTag: 'trailer',
+              extendedPadding: const EdgeInsets.all(20.0),
+              label: const Text(
+                'Trailer',
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black)),
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+              ),
+              icon: const Icon(Icons.play_circle_rounded),
+              backgroundColor: Colors.blue,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PlayerDetail(
+                          assetPath1: assetPath1,
+                          cookieprice: cookieprice,
+                          cookiename: cookiename,
+                          cookieauteur: cookieauteur,
+                          cookiecategorie: cookiecategorie,
+                          //isFavorite: gleinfo.isFavorite,
+                        )));
+              },
+            ),
+            /*ElevatedButton.icon(icon: Icon(Icons.play_circle_rounded), label: Text("df"),            onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PlayerDetail(
+                          assetPath1: assetPath1,
+                          cookieprice: cookieprice,
+                          cookiename: cookiename,
+                          cookieauteur: cookieauteur,
+                          cookiecategorie: cookiecategorie,
+                          //isFavorite: gleinfo.isFavorite,
+                        )));
+              },)*/
+            ],
+          ),
         ),
 
         Container(
@@ -276,6 +383,9 @@ class ProduitDetail extends StatelessWidget {
               style: TextStyle(
                   fontFamily: 'Varela', fontSize: 16.0, color: Colors.black)),
         ),
+        /*Container(
+          child: PlayerDetail(),
+        ),*/
         //  color: Color(0xFFB4B8B9)
         //  const SizedBox(height: 10.0),
       ]),
@@ -305,44 +415,42 @@ class ProduitDetail extends StatelessWidget {
             //icon: const Icon(Icons.message_outlined),
             backgroundColor: Colors.blue,
             onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PaymentDetail(
-                                assetPath1: assetPath1,
-                                cookieprice: cookieprice,
-                                cookiename: cookiename,
-                                cookieauteur: cookieauteur,
-                                cookiecategorie: cookiecategorie,
-                                //isFavorite: gleinfo.isFavorite,
-                              )));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PaymentDetail(
+                        assetPath1: assetPath1,
+                        cookieprice: cookieprice,
+                        cookiename: cookiename,
+                        cookieauteur: cookieauteur,
+                        cookiecategorie: cookiecategorie,
+                        //isFavorite: gleinfo.isFavorite,
+                      )));
             },
           ),
-
-                      FloatingActionButton.extended(
-                        heroTag: 'trailler',
-                        extendedPadding: const EdgeInsets.all(20.0),
-                        label: const Text(
-                          'Trailler',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        ),
-                        icon: const Icon(Icons.play_circle_rounded),
-                        backgroundColor: Colors.blue,
-                        onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PlayerDetail(
-                                assetPath1: assetPath1,
-                                cookieprice: cookieprice,
-                                cookiename: cookiename,
-                                cookieauteur: cookieauteur,
-                                cookiecategorie: cookiecategorie,
-                                //isFavorite: gleinfo.isFavorite,
-                              )));
-                        },
-                      ),
-
+          /*FloatingActionButton.extended(
+            heroTag: 'trailer',
+            extendedPadding: const EdgeInsets.all(20.0),
+            label: const Text(
+              'Trailer',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Colors.white,
+              ),
+            ),
+            icon: const Icon(Icons.play_circle_rounded),
+            backgroundColor: Colors.blue,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PlayerDetail(
+                        assetPath1: assetPath1,
+                        cookieprice: cookieprice,
+                        cookiename: cookiename,
+                        cookieauteur: cookieauteur,
+                        cookiecategorie: cookiecategorie,
+                        //isFavorite: gleinfo.isFavorite,
+                      )));
+            },
+          ),*/
         ]),
       ),
     );

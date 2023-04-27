@@ -140,7 +140,7 @@ class _ProfilSate extends State<Profil> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.mail, color: Colors.black),
+                leading: Icon(Icons.notifications_active, color: Colors.black),
                 title:
                     Text('Notification', style: TextStyle(color: Colors.black)),
                 onTap: () {
