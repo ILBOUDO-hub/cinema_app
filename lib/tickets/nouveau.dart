@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cinema/details/produit_detail.dart';
+import 'package:cinema/details/movie_detail.dart';
 import 'package:cinema/models/Product.dart';
 
 class Nouveau extends StatefulWidget {
@@ -15,24 +15,22 @@ class _NouveauState extends State<Nouveau> {
       body: Center(
         child: Column(
           children: [
-
-             SizedBox(height: 100.0),
-        Container(
-      height: 120.0,
-      width: 120.0,
-      decoration: BoxDecoration(
-      image: DecorationImage(
-      image: AssetImage(
-        'assets/images/tickets.png',),
-      fit: BoxFit.fill,
-      ),
-      shape: BoxShape.circle,
-      ),
-      ),
-           
-            
-            SizedBox(height: 20.0),
-            Text(
+            const SizedBox(height: 100.0),
+            Container(
+              height: 120.0,
+              width: 120.0,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/tickets.png',
+                  ),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
               "Vous n'avez pas de nouveau ticket !",
               style: TextStyle(
                 color: Colors.black,

@@ -1,5 +1,6 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:cinema/details/produit_detail.dart';
+import 'package:cinema/details/movie_detail.dart';
 import 'package:cinema/models/Product.dart';
 
 class Aventure extends StatefulWidget {
@@ -8,132 +9,316 @@ class Aventure extends StatefulWidget {
 }
 
 class _AventureState extends State<Aventure> {
-  List<Container> movieOscar = [];
+  String _searchText = '';
+  int _current = 0;
+  dynamic _selectedIndex = {};
 
-  @override
-  void initState() {
-    super.initState();
-    _buildList();
-  }
+  CarouselController _carouselController = new CarouselController();
 
-  void _buildList() async {
-    //BuildList recupere tous les articles a travers une boucle et les affiches dans un container
-    for (var i = 0; i < gateau.length; i++) {
-      final gleinfo = gateau[i];
-      final String cookiecategorie = gleinfo.categorie;
-      //final String categorieposter = gleinfo.name;
-      if (cookiecategorie == "action") {
-        final String priceposter = gleinfo.price.toString();
-
-        movieOscar.add(Container(
-          //  width: 260,
-          color: Color.fromARGB(255, 252, 252, 249),
-          //  padding: EdgeInsets.all(8.0),
-          child: Card(
-            elevation: 1.0,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProduitDetail(
-                      assetPath1: gleinfo.imgPath1,
-                      assetPath2: gleinfo.imgPath2,
-                      cookieprice: gleinfo.price,
-                      cookiename: gleinfo.name,
-                      cookieauteur: gleinfo.auteur,
-                      cookiecategorie: gleinfo.categorie,
-                      //isFavorite: gleinfo.isFavorite,
-                    ),
-                  ),
-                );
-              },
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    //color: Colors.amber,
-                    //Hero responsable de l'affichage des details de chaque article
-                    child: Hero(
-                      tag: gleinfo.imgPath1,
-                      child: Container(
-                        height: 160,
-                        width: 250,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: AssetImage(gleinfo.imgPath1),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Container(
-                          // Code pour le nombre de photo.
-                          width: 38,
-                          margin:
-                              const EdgeInsets.only(bottom: 4.0, right: 4.0),
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.30),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: const [
-                              Text(
-                                '2',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Icon(
-                                Icons.camera,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                        alignment: Alignment.bottomRight,
-                      ),
-                    ),
-                  ),
-                        Text(
-                          gleinfo.name, //On cast
- //On cast ici le prix de l'enitier vers le string
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                              color: Color(0xFF575E67),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Varela',
-                              fontSize: 18.0)),
-
-              ],
-            ),
-          ),
-        )));
-      }
-    }
-  }
-
+  List<dynamic> _products = [
+    {
+      'title': 'Black Adam',
+      'image': "assets/images/adam.jfif",
+      'description': 'Action',
+      'auteur': 'Action',
+      'price': '2000'
+    },
+    {
+      'title': 'Black Panthere',
+      'image': "assets/images/panther.jfif",
+      'description': 'Action',
+      'auteur': 'Black Widow',
+      'price': '2000'
+    },
+    {
+      'title': 'Astérix',
+      'image': "assets/images/asterix.jfif",
+      'description': 'Animation',
+      'auteur': 'Black Widow',
+      'price': '2000'
+    },
+    {
+      'title': 'Age Of Ultron',
+      'image': "assets/images/avengers.jfif",
+      'description': 'Action',
+      'auteur': 'Black Widow',
+      'price': '2000'
+    },
+    {
+      'title': 'Demon Slayer',
+      'image': "assets/images/demon.jfif",
+      'description': 'Godzilla Vs Kong',
+      'auteur': 'Anime',
+      'price': '2000'
+    },
+    {
+      'title': 'Avatar',
+      'image': "assets/images/avatar.jfif",
+      'description': 'Godzilla Vs Kong',
+      'auteur': 'Science-Fiction',
+      'price': '2000'
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFCFAF8),
-      body: ListView(
-        children: <Widget>[
-          const SizedBox(height: 15.0),
-          Container(
-            padding: const EdgeInsets.only(right: 17.0),
-            width: MediaQuery.of(context).size.width - 30.0,
-            height: MediaQuery.of(context).size.height - 50.0,
-            child: GridView.count(
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 0.815,
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              //movieOscar qui liste les articles
-              children: movieOscar,
+
+      body:
+          /*const SizedBox(height: 20.0),
+
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    width: 300,
+                    child: TextFormField(
+              decoration: InputDecoration(
+                labelText: "Rechercher ici...",
+                prefixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.filter_list),
+                ],
+              ),
+            ),*/
+
+          SingleChildScrollView(
+        child: Column(
+          children: [
+
+            /*Container(
+              // margin: EdgeInsets.symmetric(horizontal: 16.0),
+              decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(10.0)),
+                color: Colors.blue,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10.0),
+                        bottom: Radius.circular(10.0)),
+                    color: const Color.fromARGB(255, 222, 9, 9),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      suffixIcon: Icon(Icons.mic),
+                      border: InputBorder.none,
+                      hintText: 'Search',
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                    ),
+                  ),
+                ),
+              ),
+            ),*/
+
+          const SizedBox(height: 10.0),
+            const Text(
+              'Actuellement en salle',
+              style: TextStyle(
+                fontFamily: 'Varela',
+                fontSize: 21.0,
+                color: Colors.black87,
+              ),
             ),
-          ),
-          const SizedBox(height: 200.0)
-        ],
+            const SizedBox(height: 10.0),
+            Container(
+              width: double.infinity,
+              //height: double.infinity,
+              child: CarouselSlider(
+                  carouselController: _carouselController,
+                  options: CarouselOptions(
+                      height: 450.0,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.70,
+                      enlargeCenterPage: true,
+                      pageSnapping: true,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _current = index;
+                        });
+                      }),
+                  items: _products.map((movie) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (_selectedIndex == movie) {
+                                _selectedIndex = {};
+                              } else {
+                                _selectedIndex = movie;
+                              }
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: _selectedIndex == movie
+                                    ? Border.all(
+                                        color: Colors.blue.shade500, width: 3)
+                                    : null,
+                                boxShadow: _selectedIndex == movie
+                                    ? [
+                                        BoxShadow(
+                                            color: Colors.blue.shade100,
+                                            blurRadius: 30,
+                                            offset: Offset(0, 10))
+                                      ]
+                                    : [
+                                        BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            blurRadius: 20,
+                                            offset: Offset(0, 5))
+                                      ]),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MovieDetail(
+                                      imagePath: movie['image'],
+                                      price: movie['price'],
+                                      title: movie['title'],
+                                      author: movie['auteur'],
+                                      categorie: movie['description'],
+                                      //isFavorite: gleinfo.isFavorite,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 320,
+                                      margin: EdgeInsets.only(top: 10),
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Image.asset(movie['image'],
+                                          fit: BoxFit.cover),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Text(
+                                      movie['title'],
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      movie['description'],
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade600),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.star,
+                                                color: Colors.yellow,
+                                                size: 20,
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                '4.5',
+                                                style: TextStyle(
+                                                    fontSize: 14.0,
+                                                    color:
+                                                        Colors.grey.shade600),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.access_time,
+                                                color: Colors.grey.shade600,
+                                                size: 20,
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                '2h',
+                                                style: TextStyle(
+                                                    fontSize: 14.0,
+                                                    color:
+                                                        Colors.grey.shade600),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.play_circle_filled,
+                                                color: Colors.grey.shade600,
+                                                size: 20,
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                'Trailer',
+                                                style: TextStyle(
+                                                    fontSize: 14.0,
+                                                    color:
+                                                        Colors.grey.shade600),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }).toList()),
+            ),
+          ],
+        ),
       ),
+      //],
+      //),
     );
   }
 }

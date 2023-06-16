@@ -1,7 +1,8 @@
 import 'package:cinema/accueil.dart';
 import 'package:cinema/parametres/assistance.dart';
-import 'package:cinema/calendrier.dart';
 import 'package:cinema/categories/movies.dart';
+import 'package:cinema/parametres/favoris.dart';
+import 'package:cinema/parametres/politique.dart';
 import 'package:flutter/material.dart';
 
 class Profil extends StatefulWidget {
@@ -40,11 +41,11 @@ class _ProfilSate extends State<Profil> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
+                  const Column(
                     children: [
                       CircleAvatar(
                         radius: 65.0,
@@ -57,63 +58,59 @@ class _ProfilSate extends State<Profil> {
                         'Auguste ILBOUDO',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-
-                                    Column(
+                  Column(
                     children: [
                       Container(
                         padding: EdgeInsets.all(10),
-                         color: Colors.lightBlueAccent,
+                        color: Colors.lightBlueAccent,
                         child: Text("02", style: TextStyle(fontSize: 40)),
                       ),
-                      
-                      Text(
+                      const Text(
                         'Tickets',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-
-                                    Column(
+                  Column(
                     children: [
                       Container(
-                         padding: EdgeInsets.all(10),
-                         color: Colors.orangeAccent,
+                        padding: EdgeInsets.all(10),
+                        color: Colors.orangeAccent,
                         child: Text("00", style: TextStyle(fontSize: 40)),
                       ),
-                      Text(
+                      const Text(
                         'Favoris',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-
                 ],
               ),
 
               const SizedBox(height: 30),
 
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.account_circle,
                   color: Colors.black,
                 ),
-                title: Text(
+                title: const Text(
                   'Mon profil',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(fontSize: 18.0,color: Colors.black),
                 ),
                 onTap: () {
                   // Do something
@@ -126,37 +123,37 @@ class _ProfilSate extends State<Profil> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.dashboard, color: Colors.black),
+                leading: const Icon(Icons.dashboard, color: Colors.black),
                 title:
-                    Text('Mes favoris', style: TextStyle(color: Colors.black)),
+                    const Text('Mes favoris', style: TextStyle(fontSize: 18.0,color: Colors.black)),
                 onTap: () {
                   // Do something
                   setState(() {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return Accueil();
+                      return Favoris();
                     }));
                   });
                 },
               ),
               ListTile(
-                leading: Icon(Icons.notifications_active, color: Colors.black),
+                leading: const Icon(Icons.privacy_tip, color: Colors.black),
                 title:
-                    Text('Notification', style: TextStyle(color: Colors.black)),
+                    const Text('Termes et Conditions', style: TextStyle(fontSize: 18.0,color: Colors.black)),
                 onTap: () {
                   // Do something
                   setState(() {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return Accueil();
+                      return Privacy();
                     }));
                   });
                 },
               ),
               ListTile(
-                leading: Icon(Icons.home_work_rounded, color: Colors.black),
+                leading: const Icon(Icons.support_agent_sharp, color: Colors.black),
                 title:
-                    Text('Assistance', style: TextStyle(color: Colors.black)),
+                    const Text('Assistance', style: TextStyle(fontSize: 18.0,color: Colors.black)),
                 onTap: () {
                   // Do something
                   setState(() {
@@ -168,9 +165,9 @@ class _ProfilSate extends State<Profil> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.login_rounded, color: Colors.black),
-                title: Text('Se déconnecter',
-                    style: TextStyle(color: Colors.black)),
+                leading: const Icon(Icons.login_rounded, color: Colors.black),
+                title: const Text('Se déconnecter',
+                    style: TextStyle(fontSize: 18.0,color: Colors.black)),
                 onTap: () {
                   // Do something
                   setState(() {

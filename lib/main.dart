@@ -1,18 +1,31 @@
+import 'package:cinema/Home.dart';
 import 'package:cinema/accueil.dart';
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/firebase_options.dart';
 //import 'package:cinema/login/login.dart';
 import 'package:cinema/profil.dart';
 import 'package:cinema/tickets.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'details/video_player.dart';
+import 'details/video_player.dart';
+import 'login/phone_auth.dart';
+import 'login/phone_auth.dart';
+import 'login/user.dart';
 
 //import 'categories/movies.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Bottom Navigation Bar',
-      home: HomePage(),
+      home: HomePage (),
     ),
   );
 }
@@ -27,7 +40,7 @@ class HomePageState extends State<HomePage> {
   //int _pageIndex = 0;
 
   final List<Widget> pages = [
-    Accueil(),
+    Home(),
     Calendar(),
     Ticket(),
     Profil(),
@@ -37,31 +50,9 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      /*appBar: AppBar(
-        elevation: 2,
-        title: const Text('E-cinema'),
-        centerTitle: false,
-        titleTextStyle: const TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.blue,
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.favorite_sharp),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return Movies();
-              }));
-            },
-          ),
-        ],
-      ),*/
       body: pages[currentIndex],
       bottomNavigationBar: Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         height: size.width * .155,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -101,7 +92,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   width: size.width * .128,
                   height: index == currentIndex ? size.width * .014 : 0,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.blueAccent,
                     borderRadius: BorderRadius.vertical(
                       bottom: Radius.circular(10),

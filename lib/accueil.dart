@@ -1,10 +1,8 @@
 import 'package:cinema/categories/action.dart';
 import 'package:cinema/categories/aventure.dart';
 import 'package:cinema/categories/movies.dart';
+import 'package:cinema/parametres/cinema.dart';
 import 'package:flutter/material.dart';
-
-import 'cinema.dart';
-import 'login/login.dart';
 
 class Accueil extends StatefulWidget {
   @override
@@ -139,7 +137,7 @@ class _AccueilState extends State<Accueil> with SingleTickerProviderStateMixin {
                         )),
                   ),
                 ]),
-            Container(
+            SizedBox(
                 height: MediaQuery.of(context).size.height - 50.0,
                 width: double.infinity,
                 child: TabBarView(controller: _tabController, children: [

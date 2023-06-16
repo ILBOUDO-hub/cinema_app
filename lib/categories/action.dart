@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cinema/details/produit_detail.dart';
+import 'package:cinema/details/movie_detail.dart';
 import 'package:cinema/models/Product.dart';
 
 class Films extends StatefulWidget {
@@ -36,13 +36,13 @@ class _FilmsState extends State<Films> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProduitDetail(
-                      assetPath1: gleinfo.imgPath1,
+                    builder: (context) => MovieDetail(
+                      imagePath: gleinfo.imgPath1,
                       assetPath2: gleinfo.imgPath2,
-                      cookieprice: gleinfo.price,
-                      cookiename: gleinfo.name,
-                      cookieauteur: gleinfo.auteur,
-                      cookiecategorie: gleinfo.categorie,
+                      price: gleinfo.price,
+                      title: gleinfo.name,
+                      author: gleinfo.auteur,
+                      categorie: gleinfo.categorie,
                       //isFavorite: gleinfo.isFavorite,
                     ),
                   ),

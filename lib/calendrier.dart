@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cinema/models/Product.dart';
-import 'package:cinema/details/produit_detail.dart';
+import 'package:cinema/details/movie_detail.dart';
 
 import 'code.dart';
 import 'categories/movies.dart';
@@ -13,6 +13,8 @@ class Calendar extends StatefulWidget {
     'Ciné Burkina',
     'Ciné Nerwaya',
   ];
+
+  Calendar({super.key});
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -35,14 +37,19 @@ class _CalendarState extends State<Calendar> {
           //  padding: EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProduitDetail(
-                      //La page galerie de chaque boutique est retourne
-                      assetPath1: gleinfo.imgPath1,
-                      assetPath2: gleinfo.imgPath2,
-                      cookieprice: gleinfo.price,
-                      cookiename: gleinfo.name,
-                      cookieauteur: gleinfo.auteur)));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MovieDetail(
+                      imagePath: gleinfo.imgPath1,
+                      price: gleinfo.price,
+                      title: gleinfo.name,
+                      author: gleinfo.auteur,
+                      description: gleinfo.context,
+                      urlvideo: gleinfo.imgPath2
+                      //isFavorite: gleinfo.isFavorite,
+                      ),
+                ),
+              );
             },
             child: Card(
               elevation: 1.0,
@@ -66,7 +73,7 @@ class _CalendarState extends State<Calendar> {
                     children: [
                       Text(
                         //Nom de la boutique
-                        gleinfo.auteur,
+                        gleinfo.name,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
@@ -75,9 +82,9 @@ class _CalendarState extends State<Calendar> {
                         gleinfo.categorie.toUpperCase(),
                         style: const TextStyle(fontSize: 16),
                       ),
-                      const Text(
+                      Text(
                         //Localisation de la boutique
-                        "Ouagadougou, Burkina Faso",
+                        gleinfo.auteur,
                         style: TextStyle(fontSize: 14),
                       ),
                     ],
@@ -117,10 +124,10 @@ class _CalendarState extends State<Calendar> {
               IconButton(
                 icon: const Icon(Icons.notifications_none),
                 onPressed: () {
-                  Navigator.push(context,
+                  /*Navigator.push(context,
                       MaterialPageRoute(builder: (BuildContext context) {
                     return Movies();
-                  }));
+                  }));*/
                 },
               ),
             ],
@@ -158,14 +165,14 @@ class _CalendarState extends State<Calendar> {
                               children: [
                                 Text(
                                   '${date.day}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 5.0),
+                                const SizedBox(height: 5.0),
                                 Text(
                                   '${_getWeekday(date.weekday)}',
-                                  style: TextStyle(fontSize: 16.0),
+                                  style: const TextStyle(fontSize: 16.0),
                                 ),
                               ],
                             ),
@@ -189,7 +196,7 @@ class _CalendarState extends State<Calendar> {
                     });
                   },
                 ),*/
-                Container(
+                SizedBox(
                   //Codde pour le Dropdown pour filtrer les films en fonction des salles de cinéma
                   child: Row(
                     children: [
@@ -248,13 +255,16 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _showDropdown(BuildContext context) {
-    //Fonction pour le dropdown des salles de cinéma 
+    //Fonction pour le dropdown des salles de cinéma
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.zero,
           content: Container(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             width: MediaQuery.of(context).size.width,
             child: ListView.builder(
               shrinkWrap: true,

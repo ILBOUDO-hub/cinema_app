@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "707917630393",
+    "project_id": "burkina-app",
+    "storage_bucket": "burkina-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707917630393:android:6ddde91793c95cedd98468",
+        "android_client_info": {
+          "package_name": "com.example.cinema"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU1mh77-MDQnGO97f53zzHrt_ssgNGNfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

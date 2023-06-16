@@ -4,31 +4,34 @@ import 'package:flutter/material.dart';
 import '../models/Product.dart';
 
 class PaymentDetail extends StatelessWidget {
-  final assetPath1,
+  final imagePath,
       assetPath2,
-      cookieauteur,
-      cookieprice,
-      cookiename,
-      cookiecategorie;
+      author,
+      price,
+      title,
+      description,
+      urlvideo,
+      categorie;
   //  isFavorite;
   final _controller = PageController();
 
-  PaymentDetail({
-    this.assetPath1,
-    this.assetPath2,
-    this.cookieauteur,
-    this.cookieprice,
-    this.cookiename,
-    this.cookiecategorie,
-    //this.isFavorite
-  });
+  PaymentDetail(
+      {this.imagePath,
+      this.assetPath2,
+      this.author,
+      this.price,
+      this.title,
+      this.description,
+      this.urlvideo,
+      this.categorie
+      //this.isFavorite
+      });
 
   bool isPressed = true;
   bool isPressed2 = true;
   bool isHighlighted = true;
   @override
   Widget build(BuildContext context) {
-    String cookieprices = cookieprice.toString();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -58,7 +61,7 @@ class PaymentDetail extends StatelessWidget {
               height: 15,
             ),
             Text(
-              "Prix à payer: $cookieprice FCFA ",
+              author,
               style: TextStyle(fontSize: 15),
               textAlign: TextAlign.start,
             ),

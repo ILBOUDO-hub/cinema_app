@@ -1,112 +1,197 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-
-
-class PlayerDetail extends StatefulWidget {
-  @override
-    late final assetPath1,
+class VideoPlayerScreen extends StatefulWidget {
+  final imagePath,
       assetPath2,
-      cookieauteur,
-      cookieprice,
-      cookiename,
-      cookiecategorie;
-        PlayerDetail({
-    this.assetPath1,
-    this.assetPath2,
-    this.cookieauteur,
-    this.cookieprice,
-    this.cookiename,
-    this.cookiecategorie,
-    //this.isFavorite
-  });
-  _PlayerDetailState createState() => _PlayerDetailState();
+      author,
+      price,
+      title,
+      description,
+      urlvideo,
+      categorie;
 
+  VideoPlayerScreen(
+      {this.imagePath,
+      this.assetPath2,
+      this.author,
+      this.price,
+      this.title,
+      this.description,
+      this.urlvideo,
+      this.categorie
+      //this.isFavorite
+      });
+
+  @override
+  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
 
-class _PlayerDetailState extends State<PlayerDetail> with SingleTickerProviderStateMixin {
- 
-//class PlayerDetail extends StatelessWidget {
-
-  //  isFavorite;
-  final _controller = PageController();
-
-
-
-  bool isPressed = true;
-  bool isPressed2 = true;
-  bool isHighlighted = true;
-
-  late VideoPlayerController videocontroller;
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+  bool _isPlaying = false;
+  IconData _playPauseIcon = Icons.play_arrow;
+  Duration _currentPosition = Duration.zero;
+  Duration _videoDuration = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    videocontroller = VideoPlayerController.asset("assets/moali.mp4")
+    // Remplacez l'URL de la vidéo par votre propre URL ou chemin local de la vidéo
+    _controller = VideoPlayerController.asset(widget.urlvideo)
       ..initialize().then((_) {
-        setState(() {});
-        //videocontroller.play();
-        videocontroller.setLooping(false);
-        videocontroller.setVolume(1.0);
+        setState(() {
+          _videoDuration = _controller.value.duration;
+        });
       });
+
+    _controller.addListener(() {
+      setState(() {
+        _currentPosition = _controller.value.position;
+      });
+    });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  void _playPauseVideo() {
+    setState(() {
+      if (_controller.value.isPlaying) {
+        _controller.pause();
+        _isPlaying = false;
+        _playPauseIcon = Icons.play_arrow;
+      } else {
+        _controller.play();
+        _isPlaying = true;
+        _playPauseIcon = Icons.pause;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF545D68)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: const Text("Trailer",
-              style: TextStyle(
-                  fontFamily: 'Varela',
-                  fontSize: 20.0,
-                  color: Color(0xFF545D68))),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Column(
+        title: Text(widget.title),
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.black12,
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(//Code 
-              padding: EdgeInsets.only(top: 2),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 400,
-                child: videocontroller.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: videocontroller.value.aspectRatio,
-                        child: VideoPlayer(videocontroller),
-                      )
-                    : Container(),
-              ),
-            ),
-            const SizedBox(height: 10,),
-            Padding(//Code pour le button play et pause
-              padding: const EdgeInsets.only(top: 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ElevatedButton(
-                    child: Icon(
-                      videocontroller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow_sharp,
-                      size: 50,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isPlaying = !_isPlaying;
+                });
+                _isPlaying ? _controller.play() : _controller.pause();
+              },
+              child: Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: VideoPlayer(_controller),
+                  ),
+                  Positioned.fill(
+                    child: AnimatedOpacity(
+                      opacity: _isPlaying ? 0.0 : 1.0,
+                      duration: Duration(milliseconds: 300),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          _playPauseIcon,
+                          size: 80.0,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    onPressed: () {
-                      videocontroller.value.isPlaying
-                          ? videocontroller.pause()
-                          : videocontroller.play();
-                    },
                   ),
                 ],
               ),
-            )
+            ),
+            Row(
+              children: [
+                Text(
+                  '${_currentPosition.inMinutes}:${(_currentPosition.inSeconds % 60).toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                ),
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: VideoProgressIndicator(
+                    _controller,
+                    allowScrubbing: true,
+                    colors: const VideoProgressColors(
+                      playedColor: Colors.red,
+                      bufferedColor: Colors.grey,
+                      backgroundColor: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10.0),
+                Text(
+                  '${_videoDuration.inMinutes}:${(_videoDuration.inSeconds % 60).toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                ),
+              ],
+            ),
+            /*Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Description de la vidéo',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    widget.description,
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  SizedBox(height: 10.0),
+                  /*Row(
+                    children: [
+                      Text(
+                        '${_currentPosition.inMinutes}:${(_currentPosition.inSeconds % 60).toString().padLeft(2, '0')}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 10.0),
+                      Expanded(
+                        child: VideoProgressIndicator(
+                          _controller,
+                          allowScrubbing: true,
+                          colors: VideoProgressColors(
+                            playedColor: Colors.red,
+                            bufferedColor: Colors.grey,
+                            backgroundColor: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
+                      Text(
+                        '${_videoDuration.inMinutes}:${(_videoDuration.inSeconds % 60).toString().padLeft(2, '0')}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),*/
+                ],
+              ),
+            ),*/
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
