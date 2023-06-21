@@ -1,27 +1,29 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'details/movie_detail.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
-  List<String> _items = [
-    'Toutes',
-    'Action',
-    'Horreur',
-    'Comédie',
-    'Amour',
-  ];
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController _searchController = TextEditingController();
-  CarouselController _carouselController = CarouselController();
-  int _current = 0;
 
-  List<dynamic> _movies = [
+    List<String> categories = [
+    'Action',
+    'Comedy',
+    'Drama',
+    'Sci-Fi',
+    'Horror',
+  ];
+
+  int selectedCategoryIndex = 0;
+
+
+
+  int selectedIndex = 0;
+
+  final List<Map<String, dynamic>> _movies = [
     {
       'title': 'Black Adam',
       'image': "assets/images/adam.jfif",
@@ -65,7 +67,7 @@ class _HomeState extends State<Home> {
     {
       'title': 'Demon Slayer',
       'image': "assets/images/demon.jfif",
-      'categorie': 'Godzilla Vs Kong',
+      'categorie': 'Animation',
       'auteur': 'Anime',
       'price': '2000',
       'urlvideo': 'assets/real.mp4',
@@ -93,9 +95,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         elevation: 2,
-        title: const Text('E-cinema'),
+        title: const Text(
+          'E-cinema',
+        ),
         centerTitle: false,
         titleTextStyle: const TextStyle(
           fontSize: 25,
@@ -104,286 +107,264 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: Colors.blue,
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () {},
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: const Icon(
+                Icons.store,
+                size: 35,
+              ),
+              onPressed: () {
+                /*Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                      return Cinema();
+                  }));*/
+              },
+            ),
           ),
         ],
       ),
-      body: GestureDetector(
-        onTap: () {
-          // Fermer le clavier lorsque l'utilisateur appuie n'importe où sur l'écran
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Image.asset(_movies[_current]['image'], fit: BoxFit.cover),
-              Positioned(
-                child: Container(
-                  height: 50,
-                  margin: const EdgeInsets.only(
-                      top: 10, left: 20, right: 20, bottom: 10),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(10.0),
-                      bottom: Radius.circular(10.0),
-                    ),
-                    color: Color.fromARGB(255, 224, 223, 223),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search),
-                            border: InputBorder.none,
-                            hintText: 'Rechercher',
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 8.0,
-                            ),
-                          ),
+      body: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: Container(
+              height: 50,
+              margin: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(10.0),
+                  bottom: Radius.circular(10.0),
+                ),
+                color: Color.fromARGB(255, 224, 223, 223),
+              ),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: TextField(
+                      //controller: _searchController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        border: InputBorder.none,
+                        hintText: 'Rechercher',
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12.0,
+                          horizontal: 8.0,
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.filter_list,
-                          // size: 35,
-                        ),
-                        onPressed: () {
-                          _showDropdown(context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Colors.grey.shade50.withOpacity(1),
-                        Colors.grey.shade50.withOpacity(1),
-                        Colors.grey.shade50.withOpacity(1),
-                        Colors.grey.shade50.withOpacity(1),
-                        Colors.grey.shade50.withOpacity(0.0),
-                        Colors.grey.shade50.withOpacity(0.0),
-                        Colors.grey.shade50.withOpacity(0.0),
-                        Colors.grey.shade50.withOpacity(0.0),
-                      ],
                     ),
                   ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                height: MediaQuery.of(context).size.height * 0.7,
-                width: MediaQuery.of(context).size.width,
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: 500.0,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 0.70,
-                    enlargeCenterPage: true,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _current = index;
-                      });
+                  IconButton(
+                    icon: const Icon(
+                      Icons.filter_list,
+                      // size: 35,
+                    ),
+                    onPressed: () {
+                      //_showDropdown(context);
                     },
                   ),
-                  carouselController: _carouselController,
-                  items: _movies.map((movie) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MovieDetail(
-                                  imagePath: movie['image'],
-                                  price: movie['price'],
-                                  title: movie['title'],
-                                  author: movie['auteur'],
-                                  description: movie['description'],
-                                  urlvideo: movie['urlvideo'],
-                                  //isFavorite: gleinfo.isFavorite,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20.0),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+
+
+ Container(
+      height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    categories[index],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: index == selectedIndex ? Colors.blue : Colors.black,
+                      //decoration: index == selectedIndex
+                       //   ? TextDecoration.underline
+                         // : TextDecoration.none,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 4),
+                    height: 2,
+                    width: 30,
+                    color: index == selectedIndex ? Colors.blue : Colors.transparent,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+          
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(left: 10.0),
+              scrollDirection: Axis.horizontal,
+              itemCount: _movies.length,
+              itemBuilder: (context, index) {
+                return Row(
+                  children: [
+                    /* ListTile(
+                        leading: Image.asset(
+                          _movies[index]['image'],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text(_movies[index]['title']),
+                        subtitle: Text(_movies[index]['categorie']),
+                        trailing: const Icon(Icons.play_arrow),
+                      ),
+                      SizedBox(height: 10),*/
+
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetail(
+                              imagePath: _movies[index]['image'],
+                              price: _movies[index]['price'],
+                              title: _movies[index]['title'],
+                              author: _movies[index]['author'],
+                              description: _movies[index]['description'],
+                              urlvideo: _movies[index]['urlvideo'],
+                              //isFavorite: gleinfo.isFavorite,
                             ),
-                            child: SingleChildScrollView(
-                              child: Column(
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: Colors.grey[200]!,
+                        ),
+                        width: 300,
+                        //  height: 400,
+
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              width: 280,
+                              height: 400,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                        _movies[index]['image'],
+                                      ),
+                                      fit: BoxFit.cover)),
+                            ),
+                            Container(
+                              width: 290,
+                              height: 50,
+                              // color: Colors.amber,
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    height: 320,
-                                    margin: const EdgeInsets.only(top: 30),
-                                    clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          '4.5',
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.grey.shade600),
+                                        )
+                                      ],
                                     ),
-                                    child: Image.asset(movie['image'],
-                                        fit: BoxFit.cover),
                                   ),
-                                  const SizedBox(height: 20),
-                                  Text(
-                                    movie['title'],
-                                    style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // rating
-                                  const SizedBox(height: 20),
                                   Container(
-                                    child: Text(
-                                      movie['categorie'],
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.grey.shade600),
-                                      textAlign: TextAlign.center,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time,
+                                          color: Colors.grey.shade600,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          '2h',
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.grey.shade600),
+                                        )
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 500),
-                                    opacity: _current == _movies.indexOf(movie)
-                                        ? 1.0
-                                        : 0.0,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.yellow,
-                                                  size: 20,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(
-                                                  '4.5',
-                                                  style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      color:
-                                                          Colors.grey.shade600),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.access_time,
-                                                  color: Colors.grey.shade600,
-                                                  size: 20,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(
-                                                  '2h',
-                                                  style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      color:
-                                                          Colors.grey.shade600),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.play_circle_filled,
-                                                  color: Colors.grey.shade600,
-                                                  size: 20,
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Text(
-                                                  'Trailer',
-                                                  style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      color:
-                                                          Colors.grey.shade600),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.play_circle_filled,
+                                          color: Colors.grey.shade600,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          'Trailer',
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.grey.shade600),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showDropdown(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget._items.length,
-              itemBuilder: (BuildContext context, int index) {
-                String item = widget._items[index];
-                return ListTile(
-                  title: Text(
-                    item,
-                    style: const TextStyle(fontFamily: 'Times new roman'),
-                  ),
-                  onTap: () {
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                  ],
                 );
               },
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

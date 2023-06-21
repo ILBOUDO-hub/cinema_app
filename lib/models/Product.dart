@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Gateau {
   late String name, auteur, imgPath1, imgPath2, categorie, context;
   double price;

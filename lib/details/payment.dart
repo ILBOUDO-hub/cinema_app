@@ -1,7 +1,5 @@
-import 'package:cinema/details/video_player.dart';
 import 'package:flutter/material.dart';
 
-import '../models/Product.dart';
 
 class PaymentDetail extends StatelessWidget {
   final imagePath,
@@ -43,8 +41,8 @@ class PaymentDetail extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          title: Text("Paiement",
-              style: const TextStyle(
+          title: const Text("Paiement",
+              style: TextStyle(
                   fontFamily: 'Varela',
                   fontSize: 20.0,
                   color: Color(0xFF545D68))),

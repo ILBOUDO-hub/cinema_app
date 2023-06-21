@@ -1,15 +1,13 @@
- import 'package:cinema/home.dart';
 import 'package:cinema/login/user.dart';
-import 'package:cinema/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class OTPPage extends StatefulWidget {
-  late final String phoneNumber;
-  late final String verificationId;
+  final String phoneNumber;
+  final String verificationId;
 
-  OTPPage({
+  const OTPPage({super.key, 
     required this.phoneNumber,
     required this.verificationId,
   });
@@ -53,10 +51,22 @@ class _OTPPageState extends State<OTPPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.white,
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+                 Container(
+                  height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                        'assets/images/cine.jpg',
+                      ),
+                      fit: BoxFit.cover)
+              ),
+            ),
             const Text(
               'Veuillez entrer le code de vérification',
               style: TextStyle(fontSize: 18),
@@ -108,7 +118,7 @@ class _OTPPageState extends State<OTPPage> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: Text('Valider'),
+              child: const Text('Continuer',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
             ),
           ],
         ),

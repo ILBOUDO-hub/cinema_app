@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-import '../main.dart';
 import 'otp.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,7 +10,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   String _phoneNumber = '';
 
   Future<void> verifyPhoneNumber() async {
@@ -55,19 +54,20 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                  /*image: DecorationImage(
+                  image: DecorationImage(
                       image: AssetImage(
-                        'assets/images/OIP.jfif',
+                        'assets/images/awe.jpg',
                       ),
-                      fit: BoxFit.cover)*/
-                  gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+                      fit: BoxFit.cover)
+                /*  gradient: LinearGradient(begin: Alignment.topCenter, colors: [
                 Colors.blue[900]!,
                 Colors.blue[800]!,
                 Colors.blue[400]!,
-              ])),
+              ])*/
+              ),
             ),
           ),
-          Positioned(
+          /*Positioned(
             top: 0,
             left: 0,
             right: 0,
@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                         fit: BoxFit.cover)),
               ),
             ),
-          ),
+          ),*/
           FractionallySizedBox(
             alignment: Alignment.bottomCenter,
             heightFactor: 0.5,

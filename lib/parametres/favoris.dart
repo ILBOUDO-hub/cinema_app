@@ -50,10 +50,8 @@ class _FavorisState extends State<Favoris> {
                 },
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      //color: Colors.amber,
                       //Hero responsable de l'affichage des details de chaque article
-                      child: Hero(
+                      Hero(
                         tag: gleinfo.imgPath1,
                         child: Container(
                           height: 160,
@@ -68,7 +66,7 @@ class _FavorisState extends State<Favoris> {
                           alignment: Alignment.bottomRight,
                         ),
                       ),
-                    ),
+                    
                     Text(gleinfo.name, //On cast
                         //On cast ici le prix de l'enitier vers le string
                         textAlign: TextAlign.start,
@@ -106,7 +104,7 @@ class _FavorisState extends State<Favoris> {
       body: ListView(
         children: <Widget>[
           const SizedBox(height: 15.0),
-          Container(
+          SizedBox(
            // padding: const EdgeInsets.only(right: 25.0),
             width: MediaQuery.of(context).size.width - 30.0,
            // height: MediaQuery.of(context).size.height - 50.0,

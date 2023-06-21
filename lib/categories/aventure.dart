@@ -15,7 +15,7 @@ class _AventureState extends State<Aventure> {
 
   CarouselController _carouselController = new CarouselController();
 
-  List<dynamic> _products = [
+  final List<dynamic> _products = [
     {
       'title': 'Black Adam',
       'image': "assets/images/adam.jfif",
@@ -63,7 +63,6 @@ class _AventureState extends State<Aventure> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body:
           /*const SizedBox(height: 20.0),
 
@@ -93,7 +92,6 @@ class _AventureState extends State<Aventure> {
           SingleChildScrollView(
         child: Column(
           children: [
-
             /*Container(
               // margin: EdgeInsets.symmetric(horizontal: 16.0),
               decoration: BoxDecoration(
@@ -125,7 +123,7 @@ class _AventureState extends State<Aventure> {
               ),
             ),*/
 
-          const SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             const Text(
               'Actuellement en salle',
               style: TextStyle(
@@ -260,26 +258,23 @@ class _AventureState extends State<Aventure> {
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.access_time,
-                                                color: Colors.grey.shade600,
-                                                size: 20,
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Text(
-                                                '2h',
-                                                style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    color:
-                                                        Colors.grey.shade600),
-                                              )
-                                            ],
-                                          ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.access_time,
+                                              color: Colors.grey.shade600,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Text(
+                                              '2h',
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: Colors.grey.shade600),
+                                            )
+                                          ],
                                         ),
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *

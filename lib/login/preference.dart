@@ -25,19 +25,32 @@ class _MoviePreferencesState extends State<MoviePreferences> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Preferences films'),
+        title: const Text('Préférrences'),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.maybePop(context),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 10,
+          ),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
             child: Text(
               'Sélectionner vos préferences:',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(height: 30,),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Wrap(
@@ -66,43 +79,37 @@ class _MoviePreferencesState extends State<MoviePreferences> {
               }),
             ),
           ),
-          const SizedBox(height: 20.0),
-          /*Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Do something with the selected categories
-                                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return HomePage();
-                }));
-              },
-              child: Text('Save Preferences'),
-            ),
-          ),*/
+        ],
+      ),
+      bottomNavigationBar: Container(
+        margin:
+            const EdgeInsets.only(right: 10, left: 140, top: 10, bottom: 10),
+        padding:
+            const EdgeInsets.only(right: 10, left: 40, top: 10, bottom: 10),
 
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return HomePage();
-                }));
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: const Text(
-                'Valider',
-                style: TextStyle(fontSize: 18),
-              ),
+        height: 70,
+        width: 40,
+        //  color: Colors.amber,
+        child: FloatingActionButton.extended(
+          heroTag: 'btn1',
+          extendedPadding: const EdgeInsets.all(33.0),
+          label: const Text(
+            'Valider',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: Colors.white,
             ),
           ),
-        ],
+          //icon: const Icon(Icons.message_outlined),
+          backgroundColor: Colors.blue,
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (BuildContext context) {
+              return HomePage();
+            }));
+          },
+        ),
       ),
     );
   }

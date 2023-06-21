@@ -8,131 +8,150 @@ class Films extends StatefulWidget {
 }
 
 class _FilmsState extends State<Films> {
-  List<Container> movieOscar = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _buildList();
-  }
-
-  void _buildList() async {
-    //BuildList recupere tous les articles a travers une boucle et les affiches dans un container
-    for (var i = 0; i < gateau.length; i++) {
-      final gleinfo = gateau[i];
-      final String cookiecategorie = gleinfo.categorie;
-      //final String categorieposter = gleinfo.name;
-      if (cookiecategorie == "action") {
-        final String priceposter = gleinfo.price.toString();
-
-        movieOscar.add(Container(
-          //  width: 260,
-          color: Color.fromARGB(255, 252, 252, 249),
-          //  padding: EdgeInsets.all(8.0),
-          child: Card(
-            elevation: 1.0,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MovieDetail(
-                      imagePath: gleinfo.imgPath1,
-                      assetPath2: gleinfo.imgPath2,
-                      price: gleinfo.price,
-                      title: gleinfo.name,
-                      author: gleinfo.auteur,
-                      categorie: gleinfo.categorie,
-                      //isFavorite: gleinfo.isFavorite,
-                    ),
-                  ),
-                );
-              },
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    //color: Colors.amber,
-                    //Hero responsable de l'affichage des details de chaque article
-                    child: Hero(
-                      tag: gleinfo.imgPath1,
-                      child: Container(
-                        height: 160,
-                        width: 250,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: AssetImage(gleinfo.imgPath1),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        /*child: Container(
-                          // Code pour le nombre de photo.
-                          width: 38,
-                          margin:
-                              const EdgeInsets.only(bottom: 4.0, right: 4.0),
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.30),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: const [
-                              Text(
-                                '2',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Icon(
-                                Icons.camera,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),*/
-                        alignment: Alignment.bottomRight,
-                      ),
-                    ),
-                  ),
-                        Text(
-                          gleinfo.name, //On cast
- //On cast ici le prix de l'enitier vers le string
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                              color: Color(0xFF575E67),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Varela',
-                              fontSize: 18.0)),
-
-              ],
-            ),
-          ),
-        )));
-      }
-    }
-  }
-
+  final List<Map<String, dynamic>> _movies = [
+    {
+      'title': 'Black Adam',
+      'image': "assets/images/adam.jfif",
+      'categorie': 'Action',
+      'auteur': 'Action',
+      'price': '2000',
+      'urlvideo': 'assets/real.mp4',
+      'description':
+          "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Pourtant, ces derniers se caractérisent par un mode de vie en totale harmonie avec la nature.",
+    },
+    {
+      'title': 'Black Panthere',
+      'image': "assets/images/panther.jfif",
+      'categorie': 'Action',
+      'auteur': 'Black Widow',
+      'price': '2000',
+      'urlvideo': 'assets/real.mp4',
+      'description':
+          "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Read more...",
+    },
+    {
+      'title': 'Astérix',
+      'image': "assets/images/asterix.jfif",
+      'categorie': 'Animation',
+      'auteur': 'Black Widow',
+      'price': '2000',
+      'urlvideo': 'assets/real.mp4',
+      'description':
+          "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Pourtant, ces derniers se caractérisent par un mode de vie en totale harmonie avec la nature.",
+    },
+    {
+      'title': 'Age Of Ultron',
+      'image': "assets/images/avengers.jfif",
+      'categorie': 'Action',
+      'auteur': 'Black Widow',
+      'price': '2000',
+      'urlvideo': 'assets/real.mp4',
+      'description':
+          "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Pourtant, ces derniers se caractérisent par un mode de vie en totale harmonie avec la nature.",
+    },
+    {
+      'title': 'Demon Slayer',
+      'image': "assets/images/demon.jfif",
+      'categorie': 'Animation',
+      'auteur': 'Anime',
+      'price': '2000',
+      'urlvideo': 'assets/real.mp4',
+      'description':
+          "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Pourtant, ces derniers se caractérisent par un mode de vie en totale harmonie avec la nature.",
+    },
+    {
+      'title': 'Avatar',
+      'image': "assets/images/avatar.jfif",
+      'categorie': "Action",
+      'auteur': 'Science-Fiction',
+      'price': '2000',
+      'urlvideo': 'assets/real.mp4',
+      'description':
+          "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Pourtant, ces derniers se caractérisent par un mode de vie en totale harmonie avec la nature.",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFCFAF8),
-      body: ListView(
-        children: <Widget>[
-          const SizedBox(height: 15.0),
-          Container(
-            padding: const EdgeInsets.only(right: 17.0),
-            width: MediaQuery.of(context).size.width - 30.0,
-            height: MediaQuery.of(context).size.height - 50.0,
-            child: GridView.count(
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 0.815,
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              //movieOscar qui liste les articles
-              children: movieOscar,
+      body: GridView.builder(
+        physics: AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.only(bottom: 300),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Nombre de colonnes dans la grille
+          childAspectRatio:
+              0.7, // Rapport largeur/hauteur des éléments de la grille
+        ),
+        itemCount: _movies.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              // Action à effectuer lorsqu'un film est sélectionné
+              // Par exemple, afficher les informations détaillées du film
+              /* showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(_movies[index]['title']),
+                    content: Text(_movies[index]['description']),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Fermer'),
+                      ),
+                    ],
+                  );
+                },
+              );*/
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetail(
+                    imagePath: _movies[index]['image'],
+                    price: _movies[index]['price'],
+                    title: _movies[index]['title'],
+                    author: _movies[index]['author'],
+                    description: _movies[index]['description'],
+                    urlvideo: _movies[index]['urlvideo'],
+                    //isFavorite: gleinfo.isFavorite,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        image: DecorationImage(
+                            image: AssetImage(
+                              _movies[index]['image'],
+                            ),
+                            fit: BoxFit.cover)),
+                  ),
+                  //SizedBox(height: 10),
+                  Text(
+                    _movies[index]['title'],
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    _movies[index]['categorie'],
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 200.0)
-        ],
+          );
+        },
       ),
     );
   }

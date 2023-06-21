@@ -112,12 +112,13 @@ class _CalendarState extends State<Calendar> {
           backgroundColor: const Color(0xFFFCFAF8),
           appBar: AppBar(
             elevation: 2,
-            title: const Text('E-cinema'),
+            title: const Text("CinePlus",),
             centerTitle: false,
             titleTextStyle: const TextStyle(
-              fontSize: 25,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
               color: Colors.white,
+                          fontFamily: "Times new roman"
             ),
             backgroundColor: Colors.blue,
             actions: <Widget>[

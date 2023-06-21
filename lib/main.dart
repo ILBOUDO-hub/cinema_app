@@ -1,15 +1,18 @@
 import 'package:cinema/Home.dart';
 import 'package:cinema/accueil.dart';
+//import 'package:cinema/accueil.dart';
 import 'package:cinema/calendrier.dart';
 import 'package:cinema/firebase_options.dart';
 //import 'package:cinema/login/login.dart';
 import 'package:cinema/profil.dart';
 import 'package:cinema/tickets.dart';
+import 'package:cinema/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'details/video_player.dart';
 import 'details/video_player.dart';
+import 'login/otp.dart';
 import 'login/phone_auth.dart';
 import 'login/phone_auth.dart';
 import 'login/user.dart';
@@ -25,7 +28,7 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Bottom Navigation Bar',
-      home: HomePage (),
+      home: HomePage(),
     ),
   );
 }
@@ -40,7 +43,7 @@ class HomePageState extends State<HomePage> {
   //int _pageIndex = 0;
 
   final List<Widget> pages = [
-    Home(),
+    Welcome(),
     Calendar(),
     Ticket(),
     Profil(),
@@ -118,7 +121,6 @@ class HomePageState extends State<HomePage> {
   List<IconData> listOfIcons = [
     Icons.movie_filter,
     Icons.calendar_month_sharp,
-    //Icons.qr_code_2,
     Icons.confirmation_number_sharp,
     Icons.person_rounded
   ];

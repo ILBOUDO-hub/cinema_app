@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cinema/details/movie_detail.dart';
-import 'package:cinema/models/Product.dart';
 
 class Nouveau extends StatefulWidget {
   @override
