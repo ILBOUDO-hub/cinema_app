@@ -211,6 +211,11 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                       onTap: () {
                         setState(() {
                           selectedCategoryIndex = index;
+                          /*if (myController.fetchMovies().category ==
+                              categories[selectedCategoryIndex]) {
+                              }else{
+
+                          }*/
                         });
                       },
                       child: Container(
@@ -244,75 +249,122 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
               ),
               const SizedBox(height: 10.0),
               Container(
+                //color: Colors.amber,
                 height: 310,
-                child: ListView.builder(
-                  //padding: EdgeInsets.only(left: 10.0),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: myController.movies.length,
-                  itemBuilder: (context, index) {
-                    final movie = myController.movies[index];
-                    //Movie movie = MoviesController.instance
-                    //  .fetchMovies()
-                    //  .where((element) {
-                    //  element as Movie;
-                    return Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MovieDetail(
-                                  imagePath: movie.image,
-                                  price: "2000",
-                                  title: movie.title,
-                                  author: "Adams",
-                                  description: movie.description,
-                                  categorie: movie.category,
-                                  urlvideo: movie.video,
-                                  //isFavorite: gleinfo.isFavorite,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 250,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      image: DecorationImage(
-                                          image: NetworkImage(movie.image),
-                                          fit: BoxFit.cover)
-                                      ),
-                                ),
-                                //SizedBox(height: 10),
-                                Text(
-                                  movie.title,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  movie.category,
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                child: myController.movies.isEmpty ||
+                        !myController.movies.any((movie) =>
+                            movie.category == categories[selectedCategoryIndex])
+                    ? Column(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              'assets/images/cine.jpg',
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ),
-                        /*SizedBox(
-                          width: 10,
-                        )*/
-                      ],
-                    );
-                    //});
-                  },
-                ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text(
+                            "Films indisponible en ce moment",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
+                    : ListView.builder(
+                        //padding: EdgeInsets.only(left: 10.0),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: myController.movies.length,
+                        itemBuilder: (context, index) {
+                          final movie = myController.movies[index];
+                          //Movie movie = MoviesController.instance
+                          //  .fetchMovies()
+                          //  .where((element) {
+                          //  element as Movie;
+                          if (movie.category ==
+                              categories[selectedCategoryIndex]) {
+                            return Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MovieDetail(
+                                          imagePath: movie.image,
+                                          price: movie.price,
+                                          title: movie.title,
+                                          room: movie.room,
+                                          description: movie.description,
+                                          categorie: movie.category,
+                                          urlvideo: movie.video,
+                                          //isFavorite: gleinfo.isFavorite,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 250,
+                                          width: 200,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                              image: DecorationImage(
+                                                  image:
+                                                      NetworkImage(movie.image),
+                                                  fit: BoxFit.cover)),
+                                        ),
+                                        //SizedBox(height: 10),
+                                        Text(
+                                          movie.title,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          movie.category,
+                                          style: const TextStyle(
+                                              color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                /*SizedBox(
+                            width: 10,
+                          )*/
+                              ],
+                            );
+                          } else {
+                            /*print("C'est cake");
+                      return const Text(
+                        "Pas de film disponible en ce momentt",
+                        style: TextStyle(color: Colors.black),
+                      );*/
+                            return const SizedBox.shrink();
+                            /*Container(
+                          height: 310,
+                          child: Center(
+                            child: Image.asset(
+                              'assets/images/VR.png',
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          ));*/
+                          }
+                          //});
+                        },
+                      ),
               ),
               //const SizedBox(height: 10.0),
               const Padding(

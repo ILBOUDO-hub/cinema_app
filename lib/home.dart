@@ -251,7 +251,7 @@ class _HomeState extends State<Home> {
                               imagePath: _movies[index]['image'],
                               price: _movies[index]['price'],
                               title: _movies[index]['title'],
-                              author: _movies[index]['author'],
+                              room: _movies[index]['author'],
                               description: _movies[index]['description'],
                               urlvideo: _movies[index]['urlvideo'],
                               //isFavorite: gleinfo.isFavorite,

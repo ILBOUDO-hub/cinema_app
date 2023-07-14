@@ -114,7 +114,7 @@ class _FilmsState extends State<Films> {
                     imagePath: _movies[index]['image'],
                     price: _movies[index]['price'],
                     title: _movies[index]['title'],
-                    author: _movies[index]['author'],
+                    room: _movies[index]['room'],
                     description: _movies[index]['description'],
                     urlvideo: _movies[index]['urlvideo'],
                     //isFavorite: gleinfo.isFavorite,

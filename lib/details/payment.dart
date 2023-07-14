@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class PaymentDetail extends StatelessWidget {
   final imagePath,
       assetPath2,
-      author,
+      room,
       price,
       title,
       description,
       urlvideo,
       categorie;
   //  isFavorite;
-  final _controller = PageController();
 
   PaymentDetail(
       {super.key, this.imagePath,
       this.assetPath2,
-      this.author,
+      this.room,
       this.price,
       this.title,
       this.description,
@@ -58,7 +58,7 @@ class PaymentDetail extends StatelessWidget {
               height: 15,
             ),
             Text(
-              author,
+              room,
               style: TextStyle(fontSize: 15),
               textAlign: TextAlign.start,
             ),

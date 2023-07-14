@@ -148,9 +148,9 @@ class _CalendarState extends State<Calendar> {
                           MaterialPageRoute(
                             builder: (context) => MovieDetail(
                               imagePath: movie.image,
-                              price: "2000",
+                              price: movie.price,
                               title: movie.title,
-                              author: "Adams",
+                              room: movie.room,
                               description: movie.description,
                               categorie: movie.category,
                               urlvideo: movie.video,
@@ -178,7 +178,7 @@ class _CalendarState extends State<Calendar> {
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   movie.title,
@@ -187,13 +187,15 @@ class _CalendarState extends State<Calendar> {
                                     fontSize: 20,
                                   ),
                                 ),
+                                const SizedBox(height: 10,),
                                 Text(
                                   //'ACTION',
                                   movie.category.toString(),
                                   style: const TextStyle(fontSize: 16),
                                 ),
+                                const SizedBox(height: 10,),
                                 Text(
-                                  movie.title,
+                                  movie.room,
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ],

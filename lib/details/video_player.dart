@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class VideoPlayerScreen extends StatefulWidget {
   final imagePath,
       assetPath2,
-      author,
+      room,
       price,
       title,
       description,
@@ -16,7 +16,7 @@ class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen({
     this.imagePath,
     this.assetPath2,
-    this.author,
+    this.room,
     this.price,
     this.title,
     this.description,

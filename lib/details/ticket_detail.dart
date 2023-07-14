@@ -8,7 +8,7 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 class TicketDetail extends StatefulWidget {
   final imagePath,
       assetPath2,
-      author,
+      room,
       price,
       title,
       description,
@@ -18,7 +18,7 @@ class TicketDetail extends StatefulWidget {
   TicketDetail(
       {this.imagePath,
       this.assetPath2,
-      this.author,
+      this.room,
       this.price,
       this.title,
       this.description,
@@ -142,7 +142,7 @@ class _TicketDetailState extends State<TicketDetail> {
                                         imagePath: widget.imagePath,
                                         price: widget.price,
                                         title: widget.title,
-                                        author: widget.author,
+                                        room: widget.room,
                                         description: widget.description,
                                         urlvideo: widget.urlvideo,
                                       )));
@@ -164,7 +164,7 @@ class _TicketDetailState extends State<TicketDetail> {
                                         imagePath: widget.imagePath,
                                         price: widget.price,
                                         title: widget.title,
-                                        author: widget.author,
+                                        room: widget.room,
                                         description: widget.description,
                                         urlvideo: widget.urlvideo,
                                         //isFavorite: gleinfo.isFavorite,

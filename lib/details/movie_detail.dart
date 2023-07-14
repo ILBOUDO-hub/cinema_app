@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MovieDetail extends StatelessWidget {
-  final imagePath, author, price, title, description, urlvideo, categorie;
+  final imagePath, room, price, title, description, urlvideo, categorie;
   //  isFavorite;
   final _controller = PageController();
 
   MovieDetail(
       {this.imagePath,
-      this.author,
+      this.room,
       this.price,
       this.title,
       this.description,
@@ -104,13 +104,13 @@ class MovieDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Row(
+                      Row(
                         children: <Widget>[
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Row(
+                                const Row(
                                   children: <Widget>[
                                     Icon(
                                       Icons.star,
@@ -136,15 +136,15 @@ class MovieDetail extends StatelessWidget {
                                 ),
                                 Text.rich(
                                   TextSpan(children: [
-                                    WidgetSpan(
+                                    const WidgetSpan(
                                         child: Icon(
                                       Icons.location_on,
                                       size: 16.0,
                                       color: Colors.grey,
                                     )),
-                                    TextSpan(text: "Canal Olympia")
+                                    TextSpan(text: room)
                                   ]),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.grey, fontSize: 12.0),
                                 )
                               ],
@@ -152,8 +152,7 @@ class MovieDetail extends StatelessWidget {
                           ),
                           Column(
                             children: <Widget>[
-                              Text(
-                                "\2000 FCFA",
+                              Text(price,
                                 style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
@@ -241,7 +240,7 @@ class MovieDetail extends StatelessWidget {
                           imagePath: imagePath,
                           price: price,
                           title: title,
-                          author: author,
+                          room: room,
                           description: description,
                           urlvideo: urlvideo,
                           //isFavorite: gleinfo.isFavorite,
@@ -276,7 +275,7 @@ class MovieDetail extends StatelessWidget {
                       imagePath: imagePath,
                       price: price,
                       title: title,
-                      author: author,
+                      room: room,
                       description: description,
                       urlvideo: urlvideo,
                     )));

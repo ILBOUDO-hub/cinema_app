@@ -39,7 +39,7 @@ class _FavorisState extends State<Favoris> {
                       imagePath: gleinfo.imgPath1,
                       price: gleinfo.price,
                       title: gleinfo.name,
-                      author: gleinfo.auteur,
+                      room: gleinfo.auteur,
                       categorie: gleinfo.categorie,
                         //isFavorite: gleinfo.isFavorite,
                       ),

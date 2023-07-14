@@ -7,6 +7,10 @@ class Movie {
   String description;
   String image;
   String video;
+  String price;
+  String room;
+  DateTime endDate;
+  DateTime startDate;
 
   Movie({
     //this.id,
@@ -15,6 +19,10 @@ class Movie {
     required this.image,
     required this.video,
     required this.description,
+    required this.price,
+    required this.room,
+    required this.endDate,
+    required this.startDate,
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
@@ -25,6 +33,10 @@ class Movie {
       description: json['description'] ?? '',
       video: json['video'] ?? '',
       category: json['category'] ?? '',
+      price: json['price'] ?? '',
+      room: json['room'] ?? '',
+      endDate: json['endDate'] ?? '',
+      startDate: json['startDate'] ?? '',
     );
   }
 
@@ -36,6 +48,10 @@ class Movie {
       'description': description,
       'video': video,
       'category': category,
+      'price': price,
+      'room': room,
+      'endDate': endDate,
+      'startDate': startDate,
     };
   }
 }

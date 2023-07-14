@@ -193,7 +193,7 @@ class _AventureState extends State<Aventure> {
                                       imagePath: movie['image'],
                                       price: movie['price'],
                                       title: movie['title'],
-                                      author: movie['auteur'],
+                                      room: movie['auteur'],
                                       categorie: movie['description'],
                                       //isFavorite: gleinfo.isFavorite,
                                     ),
