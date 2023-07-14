@@ -1,11 +1,10 @@
 import 'package:cinema/categories/action.dart';
 import 'package:cinema/categories/aventure.dart';
 import 'package:cinema/categories/movies.dart';
-import 'package:cinema/parametres/cinema.dart';
 import 'package:flutter/material.dart';
 
 class Accueil extends StatefulWidget {
-  List<String> _items = [
+  final List<String> _items = [
     'Tous',
     'Canal Olympia Ouaga 2000',
     'Canal Olympia Pissy',
@@ -64,8 +63,8 @@ class _AccueilState extends State<Accueil> with SingleTickerProviderStateMixin {
         physics: const NeverScrollableScrollPhysics(),
         children: <Widget>[
           const SizedBox(height: 15.0),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
+          const Padding(
+            padding: EdgeInsets.only(left: 10.0),
             child: Text(
               "CinePlus",
               style: TextStyle(
@@ -93,10 +92,10 @@ class _AccueilState extends State<Accueil> with SingleTickerProviderStateMixin {
               ),
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: TextField(
                       //controller: _searchController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         border: InputBorder.none,
                         hintText: 'Rechercher',

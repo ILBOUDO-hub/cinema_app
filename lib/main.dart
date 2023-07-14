@@ -2,6 +2,7 @@ import 'package:cinema/Home.dart';
 import 'package:cinema/accueil.dart';
 //import 'package:cinema/accueil.dart';
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/controllers/moviesController.dart';
 import 'package:cinema/firebase_options.dart';
 //import 'package:cinema/login/login.dart';
 import 'package:cinema/profil.dart';
@@ -16,6 +17,7 @@ import 'login/otp.dart';
 import 'login/phone_auth.dart';
 import 'login/phone_auth.dart';
 import 'login/user.dart';
+import 'package:get/get.dart';
 
 //import 'categories/movies.dart';
 
@@ -24,6 +26,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put(MoviesController());
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -40,7 +43,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  //int _pageIndex = 0;
 
   final List<Widget> pages = [
     Welcome(),

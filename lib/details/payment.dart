@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class PaymentDetail extends StatelessWidget {
   final imagePath,
       assetPath2,
@@ -14,7 +13,7 @@ class PaymentDetail extends StatelessWidget {
   final _controller = PageController();
 
   PaymentDetail(
-      {this.imagePath,
+      {super.key, this.imagePath,
       this.assetPath2,
       this.author,
       this.price,

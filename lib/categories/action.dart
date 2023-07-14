@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cinema/details/movie_detail.dart';
-import 'package:cinema/models/Product.dart';
 
 class Films extends StatefulWidget {
   @override
@@ -76,10 +75,10 @@ class _FilmsState extends State<Films> {
     return Scaffold(
       backgroundColor: const Color(0xFFFCFAF8),
       body: GridView.builder(
-        physics: AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
-        padding: EdgeInsets.only(bottom: 300),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        padding: const EdgeInsets.only(bottom: 300),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // Nombre de colonnes dans la grille
           childAspectRatio:
               0.7, // Rapport largeur/hauteur des éléments de la grille
@@ -124,7 +123,7 @@ class _FilmsState extends State<Films> {
               );
             },
             child: Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -141,11 +140,11 @@ class _FilmsState extends State<Films> {
                   //SizedBox(height: 10),
                   Text(
                     _movies[index]['title'],
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     _movies[index]['categorie'],
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),

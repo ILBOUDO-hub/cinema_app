@@ -1,7 +1,6 @@
 import 'package:cinema/login/preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'otp.dart';
 
@@ -11,37 +10,6 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  final TextEditingController _phoneNumberController = TextEditingController();
-  String _phoneNumber = '';
-
-  Future<void> verifyPhoneNumber() async {
-    String phoneNumber = _phoneNumber;
-
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) {
-        // Authentification terminée automatiquement
-        // Peut être utilisé pour se connecter directement
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        // Erreur lors de la vérification du numéro de téléphone
-        print('Erreur de vérification : ${e.message}');
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        // Code OTP envoyé avec succès
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OTPPage(
-              phoneNumber: phoneNumber,
-              verificationId: verificationId,
-            ),
-          ),
-        );
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +22,7 @@ class _UserPageState extends State<UserPage> {
             heightFactor: 0.7,
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
                         'assets/images/awe.jpg',
@@ -182,7 +150,7 @@ class _UserPageState extends State<UserPage> {
                         onPressed: () {
                           Navigator.pushReplacement(context, MaterialPageRoute(
                               builder: (BuildContext context) {
-                            return MoviePreferences();
+                            return const MoviePreferences();
                           }));
                         },
                         child: const Text("Se connecter",
@@ -199,51 +167,6 @@ class _UserPageState extends State<UserPage> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showDropdown(BuildContext context) {
-    //Fonction pour le dropdown des salles de cinéma
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              width: MediaQuery.of(context).size.width,
-              height: 320,
-              child: const Column(
-                children: [
-                  Text(
-                    "Termes et Conditions.\n",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.justify,
-                  ),
-                  Text(
-                    "1-E-cinema, votre application mobile pour vous aider dans la recherche de vos salles de cinéma.E-cinema.\n",
-                    textAlign: TextAlign.justify,
-                  ),
-                  Text(
-                    "2-E-cinema, votre application mobile pour vous aider dans la recherche de vos salles de cinéma.E-cinema.\n",
-                    textAlign: TextAlign.justify,
-                  ),
-                  Text(
-                    "3-E-cinema, votre application mobile pour vous aider dans la recherche de vos salles de cinéma.E-cinema.\n",
-                    textAlign: TextAlign.justify,
-                  ),
-                  Text(
-                    "E-cinema V 1.0.0",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.justify,
-                  ),
-                ],
-              )),
-        );
-      },
     );
   }
 }

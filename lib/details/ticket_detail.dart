@@ -27,20 +27,11 @@ class TicketDetail extends StatefulWidget {
       //this.isFavorite
       });
 
-  List<String> _items = [
-    'Tous',
-    'Canal Olympia Ouaga 2000',
-    'Canal Olympia Pissy',
-    'Ciné Burkina',
-    'Ciné Nerwaya',
-  ];
-
   @override
   State<TicketDetail> createState() => _TicketDetailState();
 }
 
 class _TicketDetailState extends State<TicketDetail> {
-  String _selectedItem = 'Tous';
   DateTime _selectedDate = DateTime.now();
   List<Container> movieOscar = [];
 
@@ -129,24 +120,6 @@ class _TicketDetailState extends State<TicketDetail> {
                         );
                       },
                     ),
-                  ),
-                ),
-                SizedBox(
-                  //Codde pour le Dropdown pour filtrer les films en fonction des salles de cinéma
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                          size: 35,
-                        ),
-                        onPressed: () {
-                          _showDropdown(context);
-                        },
-                      ),
-                      const SizedBox(width: 10.0),
-                      Text(_selectedItem),
-                    ],
                   ),
                 ),
                 SafeArea(
@@ -274,36 +247,5 @@ class _TicketDetailState extends State<TicketDetail> {
       default:
         return "Invalid day";
     }
-  }
-
-  void _showDropdown(BuildContext context) {
-    //Fonction pour le dropdown des salles de cinéma
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget._items.length,
-              itemBuilder: (BuildContext context, int index) {
-                String item = widget._items[index];
-                return ListTile(
-                  title: Text(item),
-                  onTap: () {
-                    setState(() {
-                      _selectedItem = item;
-                    });
-                    Navigator.pop(context);
-                  },
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
   }
 }

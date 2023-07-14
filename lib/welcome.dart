@@ -1,13 +1,13 @@
-import 'package:cinema/categories/action.dart';
-import 'package:cinema/categories/aventure.dart';
 import 'package:cinema/categories/movies.dart';
-import 'package:cinema/parametres/cinema.dart';
+import 'package:cinema/controllers/moviesController.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'details/movie_detail.dart';
 
 class Welcome extends StatefulWidget {
-  List<String> _items = [
+  final List<String> _items = [
     'Tous',
     'Canal Olympia Ouaga 2000',
     'Canal Olympia Pissy',
@@ -20,8 +20,10 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
+  final MoviesController myController = Get.find<MoviesController>();
   List<String> categories = [
     'Recommandé',
+    'Africain',
     'Action',
     'Comedie',
     'Romance',
@@ -33,7 +35,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
 
   int selectedIndex = 0;
 
-  final List<Map<String, dynamic>> _movies = [
+  /*final List<Map<String, dynamic>> _movies = [
     {
       'title': 'Black Adam',
       'image': "assets/images/adam.jfif",
@@ -94,45 +96,19 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
       'description':
           "En l’an 2154, Jake Sully, ancien marine paraplégique, accepte de participer au programme Avatar pour remplacer son frère jumeau décédé, Tom Sully. Il est envoyé sur Pandora, l’une des lunes de Polyphème, une planète géante gazeuse en orbite autour d'Alpha Centauri A.En outre, la planète est habitée par les Na'vis, une espèce indigène humanoïde qu'ils considèrent comme primitive et hostile. Pourtant, ces derniers se caractérisent par un mode de vie en totale harmonie avec la nature.",
     },
-  ];
+  ];*/
 
   int selectedCategoryIndex = 0;
 
-  String _selectedItem = 'Tous';
+  @override
+  void initState() {
+    super.initState();
+    myController.fetchMovies();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        elevation: 2,
-        title: const Text(
-          'E-cinema',
-        ),
-        centerTitle: false,
-        titleTextStyle: const TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.blue,
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              icon: const Icon(
-                Icons.store,
-                size: 35,
-              ),
-              onPressed: () {
-                /*Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                      return Cinema();
-                  }));*/
-              },
-            ),
-          ),
-        ],
-      ),*/
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -140,7 +116,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
             children: <Widget>[
               const SizedBox(height: 15.0),
               Padding(
-                padding: EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -272,8 +248,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 child: ListView.builder(
                   //padding: EdgeInsets.only(left: 10.0),
                   scrollDirection: Axis.horizontal,
-                  itemCount: _movies.length,
+                  itemCount: myController.movies.length,
                   itemBuilder: (context, index) {
+                    final movie = myController.movies[index];
+                    //Movie movie = MoviesController.instance
+                    //  .fetchMovies()
+                    //  .where((element) {
+                    //  element as Movie;
                     return Row(
                       children: [
                         GestureDetector(
@@ -282,12 +263,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MovieDetail(
-                                  imagePath: _movies[index]['image'],
-                                  price: _movies[index]['price'],
-                                  title: _movies[index]['title'],
-                                  author: _movies[index]['author'],
-                                  description: _movies[index]['description'],
-                                  urlvideo: _movies[index]['urlvideo'],
+                                  imagePath: movie.image,
+                                  price: "2000",
+                                  title: movie.title,
+                                  author: "Adams",
+                                  description: movie.description,
+                                  categorie: movie.category,
+                                  urlvideo: movie.video,
                                   //isFavorite: gleinfo.isFavorite,
                                 ),
                               ),
@@ -304,21 +286,20 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
                                       image: DecorationImage(
-                                          image: AssetImage(
-                                            _movies[index]['image'],
-                                          ),
-                                          fit: BoxFit.cover)),
+                                          image: NetworkImage(movie.image),
+                                          fit: BoxFit.cover)
+                                      ),
                                 ),
                                 //SizedBox(height: 10),
                                 Text(
-                                  _movies[index]['title'],
-                                  style: TextStyle(
+                                  movie.title,
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  _movies[index]['categorie'],
-                                  style: TextStyle(color: Colors.grey),
+                                  movie.category,
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -329,6 +310,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         )*/
                       ],
                     );
+                    //});
                   },
                 ),
               ),
@@ -357,7 +339,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   ],
                 ),
               ),
-              Container(
+              /*Container(
                 height: 310,
                 child: ListView.builder(
                   //padding: EdgeInsets.only(left: 10.0),
@@ -384,7 +366,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                             );
                           },
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -402,13 +384,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                 //SizedBox(height: 10),
                                 Text(
                                   _movies[index]['title'],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   _movies[index]['categorie'],
-                                  style: TextStyle(color: Colors.grey),
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -421,7 +403,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                     );
                   },
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
@@ -449,9 +431,9 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 return ListTile(
                   title: Text(item),
                   onTap: () {
-                    setState(() {
+                    /*setState(() {
                       _selectedItem = item;
-                    });
+                    });*/
                     Navigator.pop(context);
                   },
                 );

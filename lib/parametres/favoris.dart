@@ -23,7 +23,6 @@ class _FavorisState extends State<Favoris> {
       final String cookiecategorie = gleinfo.categorie;
       //final String categorieposter = gleinfo.name;
       if (cookiecategorie == "action") {
-        final String priceposter = gleinfo.price.toString();
 
         movieOscar.add(Container(
             //  width: 260,
@@ -38,7 +37,6 @@ class _FavorisState extends State<Favoris> {
                     MaterialPageRoute(
                       builder: (context) => MovieDetail(
                       imagePath: gleinfo.imgPath1,
-                      assetPath2: gleinfo.imgPath2,
                       price: gleinfo.price,
                       title: gleinfo.name,
                       author: gleinfo.auteur,

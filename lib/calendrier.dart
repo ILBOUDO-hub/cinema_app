@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cinema/models/Product.dart';
+import 'package:cinema/controllers/moviesController.dart';
 import 'package:cinema/details/movie_detail.dart';
-
-import 'code.dart';
-import 'categories/movies.dart';
+import 'package:cinema/models/movies.dart';
 
 class Calendar extends StatefulWidget {
-  List<String> _items = [
+  final List<String> _items = [
     'Tous',
     'Canal Olympia Ouaga 2000',
     'Canal Olympia Pissy',
@@ -21,234 +19,215 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
+  MoviesController moviesController = MoviesController.instance;
+
   String _selectedItem = 'Tous';
   DateTime _selectedDate = DateTime.now();
-  List<Container> movieOscar = [];
-
-  buildList() async {
-    //BuildList recupere tous les articles a travers une boucle et les affiches dans un container
-    for (var i = 0; i < gateau.length; i++) {
-      final gleinfo = gateau[i];
-      //final String categorieposter = gleinfo.name;
-      if (gleinfo.categorie == "action") {
-        movieOscar.add(Container(
-          //  width: 260,
-          color: const Color.fromARGB(255, 252, 252, 249),
-          //  padding: EdgeInsets.all(8.0),
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MovieDetail(
-                      imagePath: gleinfo.imgPath1,
-                      price: gleinfo.price,
-                      title: gleinfo.name,
-                      author: gleinfo.auteur,
-                      description: gleinfo.context,
-                      urlvideo: gleinfo.imgPath2
-                      //isFavorite: gleinfo.isFavorite,
-                      ),
-                ),
-              );
-            },
-            child: Card(
-              elevation: 1.0,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                              image: AssetImage(gleinfo.imgPath1),
-                              fit: BoxFit.cover)),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        //Nom de la boutique
-                        gleinfo.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                      Text(
-                        //categorie d'article vendu
-                        gleinfo.categorie.toUpperCase(),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        //Localisation de la boutique
-                        gleinfo.auteur,
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ));
-      }
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    buildList();
+    fetchMovies();
+  }
+
+  Future<void> fetchMovies() async {
+    await moviesController.fetchMovies();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-          backgroundColor: const Color(0xFFFCFAF8),
-          appBar: AppBar(
-            elevation: 2,
-            title: const Text("CinePlus",),
-            centerTitle: false,
-            titleTextStyle: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-                          fontFamily: "Times new roman"
-            ),
-            backgroundColor: Colors.blue,
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.notifications_none),
-                onPressed: () {
-                  /*Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return Movies();
-                  }));*/
-                },
-              ),
-            ],
+    return Scaffold(
+      // debugShowCheckedModeBanner: false,
+      // home: Scaffold(
+      backgroundColor: const Color(0xFFFCFAF8),
+      appBar: AppBar(
+        elevation: 2,
+        title: const Text(
+          "CinePlus",
+        ),
+        centerTitle: false,
+        titleTextStyle: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontFamily: "Times new roman"),
+        backgroundColor: Colors.blue,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.notifications_none),
+            onPressed: () {
+              /*Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return Movies();
+                }));*/
+            },
           ),
-          body: Stack(children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 70.0,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 7,
-                      itemBuilder: (BuildContext context, int index) {
-                        DateTime date =
-                            DateTime.now().add(Duration(days: index));
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedDate = date;
-                            });
-                          },
-                          child: Container(
-                            width: 70.0,
-                            margin: EdgeInsets.only(right: 10.0),
-                            decoration: BoxDecoration(
-                              color: _selectedDate.day == date.day
-                                  ? Colors.blue
-                                  : Color.fromARGB(255, 220, 219, 219),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${date.day}',
-                                  style: const TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  '${_getWeekday(date.weekday)}',
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                              ],
+        ],
+      ),
+      body: Stack(
+        children: [
+          ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 70.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 7,
+                    itemBuilder: (BuildContext context, int index) {
+                      DateTime date = DateTime.now().add(Duration(days: index));
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedDate = date;
+                          });
+                        },
+                        child: Container(
+                          width: 70.0,
+                          margin: const EdgeInsets.only(right: 10.0),
+                          decoration: BoxDecoration(
+                            color: _selectedDate.day == date.day
+                                ? Colors.blue
+                                : const Color.fromARGB(255, 220, 219, 219),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${date.day}',
+                                style: const TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text(
+                                '${_getWeekday(date.weekday)}',
+                                style: const TextStyle(fontSize: 16.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        size: 35,
+                      ),
+                      onPressed: () {
+                        _showDropdown(context);
+                      },
+                    ),
+                    const SizedBox(width: 10.0),
+                    Text(_selectedItem),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                width: MediaQuery.of(context).size.width - 20.0,
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: moviesController.movies.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Movie movie = moviesController.movies[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetail(
+                              imagePath: movie.image,
+                              price: "2000",
+                              title: movie.title,
+                              author: "Adams",
+                              description: movie.description,
+                              categorie: movie.category,
+                              urlvideo: movie.video,
                             ),
                           ),
                         );
                       },
-                    ),
-                  ),
-                ),
-                /*ListTile(
-                  leading: Icon(Icons.calendar_month, color: Colors.black),
-                  title:
-                      Text('DateTime', style: TextStyle(color: Colors.black)),
-                  onTap: () {
-                    // Do something
-                    setState(() {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return CalendarPage();
-                      }));
-                    });
-                  },
-                ),*/
-                SizedBox(
-                  //Codde pour le Dropdown pour filtrer les films en fonction des salles de cinéma
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                          size: 35,
+                      child: Card(
+                        elevation: 1.0,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                    image: NetworkImage(movie.image),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  movie.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text(
+                                  //'ACTION',
+                                  movie.category.toString(),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  movie.title,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        onPressed: () {
-                          _showDropdown(context);
-                        },
                       ),
-                      const SizedBox(width: 10.0),
-                      Text(_selectedItem),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-                Container(
-                  //padding: const EdgeInsets.only(right: 17.0),
-                  margin: const EdgeInsets.all(10.0),
-                  width: MediaQuery.of(context).size.width - 20.0,
-                  //   height: MediaQuery.of(context).size.height - 50.0,
-                  child: ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    //Recupere ici toutes les boutiques
-                    children: movieOscar,
-                  ),
-                ),
-              ],
-            )
-          ])),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
+    //);
   }
 
-  // Récupérer le jour de la semaine à partir de l'indice
   String _getWeekday(int weekday) {
     switch (weekday) {
-      case 1:
+      case DateTime.monday:
         return 'Lun';
-      case 2:
+      case DateTime.tuesday:
         return 'Mar';
-      case 3:
+      case DateTime.wednesday:
         return 'Mer';
-      case 4:
+      case DateTime.thursday:
         return 'Jeu';
-      case 5:
+      case DateTime.friday:
         return 'Ven';
-      case 6:
+      case DateTime.saturday:
         return 'Sam';
-      case 7:
+      case DateTime.sunday:
         return 'Dim';
       default:
         return "Invalid day";
@@ -256,7 +235,6 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _showDropdown(BuildContext context) {
-    //Fonction pour le dropdown des salles de cinéma
     showDialog(
       context: context,
       builder: (BuildContext context) {

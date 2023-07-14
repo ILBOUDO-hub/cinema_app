@@ -1,8 +1,6 @@
 import 'package:cinema/tickets/nouveau.dart';
 import 'package:flutter/material.dart';
 
-import 'categories/movies.dart';
-
 class Ticket extends StatefulWidget {
   @override
   _TicketState createState() => _TicketState();

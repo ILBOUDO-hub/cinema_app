@@ -4,20 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MovieDetail extends StatelessWidget {
-  final imagePath,
-      assetPath2,
-      author,
-      price,
-      title,
-      description,
-      urlvideo,
-      categorie;
+  final imagePath, author, price, title, description, urlvideo, categorie;
   //  isFavorite;
   final _controller = PageController();
 
   MovieDetail(
       {this.imagePath,
-      this.assetPath2,
       this.author,
       this.price,
       this.title,
@@ -46,10 +38,16 @@ class MovieDetail extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Container(
-              foregroundDecoration: const BoxDecoration(color: Colors.black26),
-              //  height: 400,
-              width: double.infinity,
-              child: Image.asset(imagePath, fit: BoxFit.cover)),
+            foregroundDecoration: const BoxDecoration(color: Colors.black26),
+            //  height: 400,
+            width: double.infinity,
+            //  decoration: BoxDecoration(
+            //      borderRadius: BorderRadius.circular(10.0),
+            child: Image.network(imagePath),
+            // image: DecorationImage(
+            //   image: NetworkImage(imagePath), fit: BoxFit.cover)),
+            //  child: NetworkImage(imagePath, fit: BoxFit.cover)
+          ),
           SingleChildScrollView(
             padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
             child: Column(
@@ -90,7 +88,7 @@ class MovieDetail extends StatelessWidget {
                           icon: const Icon(Icons.favorite_border),
                           onPressed: () {},
                         ),
-                                                IconButton(
+                        IconButton(
                           color: Colors.white,
                           icon: const Icon(Icons.share_rounded),
                           onPressed: () {},
@@ -173,7 +171,7 @@ class MovieDetail extends StatelessWidget {
                       const SizedBox(height: 30.0),
                       Container(
                         //padding: EdgeInsets.all(16.0),
-                        child:const Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("36 Commentaires",
@@ -254,7 +252,8 @@ class MovieDetail extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(right: 40, left: 40, top: 10, bottom: 10),
+        padding:
+            const EdgeInsets.only(right: 40, left: 40, top: 10, bottom: 10),
         height: 70,
         width: 60,
         //color: Colors.amber,

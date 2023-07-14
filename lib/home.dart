@@ -8,8 +8,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-    List<String> categories = [
+  List<String> categories = [
     'Action',
     'Comedy',
     'Drama',
@@ -18,8 +17,6 @@ class _HomeState extends State<Home> {
   ];
 
   int selectedCategoryIndex = 0;
-
-
 
   int selectedIndex = 0;
 
@@ -176,50 +173,51 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: 10,
           ),
-
-
- Container(
-      height: 50,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    categories[index],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: index == selectedIndex ? Colors.blue : Colors.black,
-                      //decoration: index == selectedIndex
-                       //   ? TextDecoration.underline
-                         // : TextDecoration.none,
+          Container(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          categories[index],
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: index == selectedIndex
+                                ? Colors.blue
+                                : Colors.black,
+                            //decoration: index == selectedIndex
+                            //   ? TextDecoration.underline
+                            // : TextDecoration.none,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 4),
+                          height: 2,
+                          width: 30,
+                          color: index == selectedIndex
+                              ? Colors.blue
+                              : Colors.transparent,
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 4),
-                    height: 2,
-                    width: 30,
-                    color: index == selectedIndex ? Colors.blue : Colors.transparent,
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
-    ),
-          
+          ),
           SizedBox(
             height: 10,
           ),

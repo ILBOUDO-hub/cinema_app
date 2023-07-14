@@ -1,6 +1,5 @@
 import 'package:cinema/accueil.dart';
 import 'package:cinema/parametres/assistance.dart';
-import 'package:cinema/categories/movies.dart';
 import 'package:cinema/parametres/favoris.dart';
 import 'package:cinema/parametres/politique.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class _ProfilSate extends State<Profil> {
             child: Column(
               children: [
                 const SizedBox(height: 15),
-                /*Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Column(
@@ -101,8 +100,8 @@ class _ProfilSate extends State<Profil> {
                       ],
                     ),
                   ],
-                ),*/
-                const Column(
+                ),
+                /*const Column(
                   children: [
                     CircleAvatar(
                       radius: 65.0,
@@ -130,11 +129,11 @@ class _ProfilSate extends State<Profil> {
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           color: Colors.lightBlueAccent,
-                          child: Text("02", style: TextStyle(fontSize: 40)),
+                          child: const Text("00", style: TextStyle(fontSize: 40)),
                         ),
-                        Container(padding: EdgeInsets.only(top: 25, right: 10.0),
+                        Container(padding: const EdgeInsets.only(top: 25, right: 10.0),
                           height: 67,
                           color: Colors.lightBlueAccent,
                           child: const Text(
@@ -151,11 +150,11 @@ class _ProfilSate extends State<Profil> {
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           color: Colors.orangeAccent,
-                          child: Text("00", style: TextStyle(fontSize: 40)),
+                          child: const Text("00", style: TextStyle(fontSize: 40)),
                         ),
-                        Container(padding: EdgeInsets.only(top: 25, right: 10.0),
+                        Container(padding: const EdgeInsets.only(top: 25, right: 10.0),
                           height: 67,
                           color: Colors.orangeAccent,
                           child: const Text(
@@ -170,7 +169,7 @@ class _ProfilSate extends State<Profil> {
                       ],
                     ),
                   ],
-                ),
+                ),*/
 
                 ListTile(
                   leading: const Icon(
