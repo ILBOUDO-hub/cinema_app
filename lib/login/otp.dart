@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../main.dart';
+
 class OTPPage extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
@@ -24,11 +26,23 @@ class _OTPPageState extends State<OTPPage> {
       List.generate(6, (_) => TextEditingController());
   String _otp = '';
 
-  void _submitOTP() {
-    if (_otp.length == 6) {
+  void _submitOTP() async {
+  if (_otp.length == 6) {
+    bool userExists = await _checkUserExistence();
+
+    if (userExists) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) {
+          return HomePage();
+        }),
+      );
+    } else {
       _verifyOTP(_otp);
     }
   }
+}
+
 
   Future<void> _verifyOTP(String otp) async {
     try {
@@ -56,6 +70,18 @@ class _OTPPageState extends State<OTPPage> {
       print('Erreur de vérification du code OTP : $e');
     }
   }
+
+  Future<bool> _checkUserExistence() async {
+  String phoneNumber = widget.phoneNumber;
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('phone', isEqualTo: phoneNumber)
+      .limit(1)
+      .get();
+
+  return snapshot.docs.isNotEmpty;
+}
+
 
   @override
   Widget build(BuildContext context) {
