@@ -3,9 +3,11 @@ import 'package:cinema/controllers/moviesController.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'details/movie_detail.dart';
 import 'models/movies.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Welcome extends StatefulWidget {
   final List<String> _items = [
@@ -43,12 +45,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
 
   int selectedIndex = 0;
 
-  int selectedCategoryIndex = 0;
+  late int selectedCategoryIndex;
 
   @override
   void initState() {
     super.initState();
-    myController.fetchMovies();
+    selectedCategoryIndex = categories.indexOf('Recommandé');
+    print(selectedCategoryIndex);
   }
 
   List<Movie> getFilteredMovies() {
@@ -182,35 +185,175 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
               const SizedBox(height: 10.0),
               Container(
                 height: 310,
-                child: getFilteredMovies().isEmpty
-                    ? Column(
-                        children: [
-                          Center(
-                            child: Image.asset(
-                              'assets/images/cine.jpg',
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
+                child: FutureBuilder(
+                  future: myController.fetchMovies(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Afficher une indication de chargement
+                      return SpinKitCircle(
+                        color: Colors.blue,
+                        size: 50.0,
+                      );
+                    } else if (snapshot.hasError) {
+                      // Afficher un message d'erreur si une erreur s'est produite
+                      return Text('Erreur: ${snapshot.error}');
+                    } else {
+                      // Afficher la liste des films filtrés
+                      if (getFilteredMovies().isEmpty) {
+                        return Column(
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                'assets/images/VR.png',
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Text(
-                            "Films indisponibles pour le moment",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                        ],
-                      )
-                    : ListView.builder(
+                            const Text(
+                              "Films indisponibles pour le moment",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return ListView.builder(
+                          //padding: EdgeInsets.only(left: 10.0),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: getFilteredMovies().length,
+                          itemBuilder: (context, index) {
+                            final movie = getFilteredMovies()[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MovieDetail(
+                                      imagePath: movie.image,
+                                      price: movie.price,
+                                      title: movie.title,
+                                      room: movie.room,
+                                      description: movie.description,
+                                      categorie: movie.category,
+                                      urlvideo: movie.video,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 250,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        image: DecorationImage(
+                                          image: NetworkImage(movie.image),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      movie.title,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          movie.category,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(width: 30),
+                                        Text(
+                                          '${movie.price} FCFA',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+              // ...
+
+              const Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Row(
+                  //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "A venir...",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontFamily: "Times new roman"),
+                    ),
+                    Text(
+                      "",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          fontFamily: "Times new roman"),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 10.0),
+              Container(
+                height: 310,
+                child: FutureBuilder(
+                  future: myController.fetchMovies(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // Afficher une indication de chargement
+                      return SpinKitCircle(
+                        color: Colors.blue,
+                        size: 50.0,
+                      );
+                    } else if (snapshot.hasError) {
+                      // Afficher un message d'erreur si une erreur s'est produite
+                      return Text('Erreur: ${snapshot.error}');
+                    } else {
+                      // Afficher la liste des films
+                      return ListView.builder(
                         //padding: EdgeInsets.only(left: 10.0),
                         scrollDirection: Axis.horizontal,
-                        itemCount: getFilteredMovies().length,
+                        itemCount: myController.movies.length,
                         itemBuilder: (context, index) {
-                          final movie = getFilteredMovies()[index];
+                          final movie = myController.movies[index];
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -237,7 +380,8 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                     height: 250,
                                     width: 200,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderRadius:
+                                          BorderRadius.circular(10.0),
                                       image: DecorationImage(
                                         image: NetworkImage(movie.image),
                                         fit: BoxFit.cover,
@@ -247,16 +391,14 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                   Text(
                                     movie.title,
                                     style: const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     movie.category,
                                     style: const TextStyle(
-                                      fontSize: 16,
                                       color: Colors.grey,
-                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
@@ -264,9 +406,11 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                             ),
                           );
                         },
-                      ),
+                      );
+                    }
+                  },
+                ),
               ),
-              // ...
             ],
           ),
         ),
