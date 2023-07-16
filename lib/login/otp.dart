@@ -2,12 +2,14 @@ import 'package:cinema/login/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OTPPage extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
 
-  const OTPPage({super.key, 
+  const OTPPage({
+    super.key,
     required this.phoneNumber,
     required this.verificationId,
   });
@@ -35,10 +37,18 @@ class _OTPPageState extends State<OTPPage> {
         smsCode: otp,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Enregistrement du numéro de téléphone sur Firebase
+      /*String uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .set({'phone': widget.phoneNumber});*/
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (BuildContext context) {
-          return UserPage();
+          return UserPage(phoneNumber: widget.phoneNumber);
         }),
       );
     } catch (e) {
@@ -56,16 +66,15 @@ class _OTPPageState extends State<OTPPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-                 Container(
-                  height: 300,
+            Container(
+              height: 300,
               width: 300,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
                         'assets/images/cine.jpg',
                       ),
-                      fit: BoxFit.cover)
-              ),
+                      fit: BoxFit.cover)),
             ),
             const Text(
               'Veuillez entrer le code de vérification',
@@ -113,12 +122,16 @@ class _OTPPageState extends State<OTPPage> {
               onPressed: _submitOTP,
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: const Text('Continuer',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+              child: const Text(
+                'Continuer',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),

@@ -31,7 +31,7 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Bottom Navigation Bar',
-      home: HomePage(),
+      home: LoginPage(),
     ),
   );
 }

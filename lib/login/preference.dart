@@ -1,5 +1,7 @@
-import 'package:cinema/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cinema/main.dart';
 
 class MoviePreferences extends StatefulWidget {
   const MoviePreferences({Key? key}) : super(key: key);
@@ -10,25 +12,45 @@ class MoviePreferences extends StatefulWidget {
 
 class _MoviePreferencesState extends State<MoviePreferences> {
   final List<String> _categories = [
+    'Recommandé',
+    'Africain',
     'Action',
-    'Comédie',
+    'Comedie',
+    'Romance',
+    'Animation',
     'Drama',
-    'Horreur',
     'Science-Fiction',
-    'Anime',
-    'Aventure',
-    'Amour'
+    'Horreur',
   ];
   List<String> _selectedCategories = [];
+
+  void _savePreferences() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    List<String> preferences = _selectedCategories;
+
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'preferences': preferences,
+    });
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) {
+        return HomePage();
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Préférrences'),
+        title: const Text('Préférences'),
         centerTitle: true,
         titleTextStyle: const TextStyle(
-            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
         backgroundColor: Colors.blue,
         leading: IconButton(
           icon: const Icon(
@@ -47,7 +69,7 @@ class _MoviePreferencesState extends State<MoviePreferences> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
             child: Text(
-              'Sélectionner vos préferences:',
+              'Sélectionner vos préférences :',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ),
@@ -82,14 +104,10 @@ class _MoviePreferencesState extends State<MoviePreferences> {
         ],
       ),
       bottomNavigationBar: Container(
-        margin:
-            const EdgeInsets.only(right: 10, left: 140, top: 10, bottom: 10),
-        padding:
-            const EdgeInsets.only(right: 10, left: 40, top: 10, bottom: 10),
-
+        margin: const EdgeInsets.only(right: 10, left: 140, top: 10, bottom: 10),
+        padding: const EdgeInsets.only(right: 10, left: 40, top: 10, bottom: 10),
         height: 70,
         width: 40,
-        //  color: Colors.amber,
         child: FloatingActionButton.extended(
           heroTag: 'btn1',
           extendedPadding: const EdgeInsets.all(33.0),
@@ -101,14 +119,8 @@ class _MoviePreferencesState extends State<MoviePreferences> {
               color: Colors.white,
             ),
           ),
-          //icon: const Icon(Icons.message_outlined),
           backgroundColor: Colors.blue,
-          onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (BuildContext context) {
-              return HomePage();
-            }));
-          },
+          onPressed: _savePreferences,
         ),
       ),
     );

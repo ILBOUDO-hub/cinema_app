@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
             heightFactor: 0.7,
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
                         'assets/images/awe.jpg',

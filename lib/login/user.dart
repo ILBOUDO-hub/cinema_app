@@ -1,15 +1,53 @@
 import 'package:cinema/login/preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'otp.dart';
 
 class UserPage extends StatefulWidget {
+  final String phoneNumber;
+
+  const UserPage({Key? key, required this.phoneNumber}) : super(key: key);
+
   @override
   _UserPageState createState() => _UserPageState();
 }
 
 class _UserPageState extends State<UserPage> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+void _createAccount() async {
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  String firstName = _firstNameController.text;
+  String lastName = _lastNameController.text;
+  String email = _emailController.text;
+  String phoneNumber = widget.phoneNumber;
+
+  await FirebaseFirestore.instance.collection('users').doc(uid).set({
+    'firstName': firstName,
+    'lastName': lastName,
+    'email': email,
+    'phone': phoneNumber,
+  });
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (BuildContext context) {
+      return const MoviePreferences();
+    }),
+  );
+}
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +100,14 @@ class _UserPageState extends State<UserPage> {
                         ],
                       ),
                     ),
-                    const Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                    Card(
+                      margin: const EdgeInsets.only(left: 30, right: 30, top: 20),
                       elevation: 11,
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(40))),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: _lastNameController,
+                        decoration: const InputDecoration(
                             prefixIcon: Icon(
                               Icons.person,
                               color: Colors.black26,
@@ -86,13 +125,14 @@ class _UserPageState extends State<UserPage> {
                                 horizontal: 20.0, vertical: 16.0)),
                       ),
                     ),
-                    const Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                    Card(
+                      margin: const EdgeInsets.only(left: 30, right: 30, top: 20),
                       elevation: 11,
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(40))),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: _firstNameController,
+                        decoration: const InputDecoration(
                             prefixIcon: Icon(
                               Icons.person,
                               color: Colors.black26,
@@ -110,13 +150,14 @@ class _UserPageState extends State<UserPage> {
                                 horizontal: 20.0, vertical: 16.0)),
                       ),
                     ),
-                    const Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                    Card(
+                      margin: const EdgeInsets.only(left: 30, right: 30, top: 20),
                       elevation: 11,
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(40))),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
                             prefixIcon: Icon(
                               Icons.mail,
                               color: Colors.black26,
@@ -147,12 +188,7 @@ class _UserPageState extends State<UserPage> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(40.0))),
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return const MoviePreferences();
-                          }));
-                        },
+                        onPressed: _createAccount, // Appel de la fonction pour créer le compte
                         child: const Text("Se connecter",
                             style: TextStyle(
                                 color: Colors.white,

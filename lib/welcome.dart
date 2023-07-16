@@ -1,5 +1,6 @@
 import 'package:cinema/categories/movies.dart';
 import 'package:cinema/controllers/moviesController.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,21 +36,22 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
     'Science-Fiction',
     'Horreur',
   ];
-  List<String> selectedCategories = [
+  /*List<String> selectedCategories = [
     'Africain',
     'Action',
     'Comedie',
     'Romance',
     'Animation',
-  ];
+  ];*/
 
   int selectedIndex = 0;
 
   late int selectedCategoryIndex;
-
+  late List<String> selectedCategories;
   @override
   void initState() {
     super.initState();
+    fetchUserPreferences();
     selectedCategoryIndex = categories.indexOf('Recommandé');
     print(selectedCategoryIndex);
   }
@@ -57,12 +59,28 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   List<Movie> getFilteredMovies() {
     if (categories[selectedCategoryIndex] == 'Recommandé') {
       return myController.movies
-          .where((movie) => selectedCategories.contains(movie.category))
+          .where(
+              (movie) => selectedCategories?.contains(movie.category) ?? false)
           .toList();
     } else {
       return myController.movies
           .where((movie) => movie.category == categories[selectedCategoryIndex])
           .toList();
+    }
+  }
+
+  void fetchUserPreferences() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (snapshot.exists) {
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      if (data.containsKey('preferences')) {
+        setState(() {
+          selectedCategories = List<String>.from(data['preferences']);
+        });
+      }
     }
   }
 
@@ -380,8 +398,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                     height: 250,
                                     width: 200,
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       image: DecorationImage(
                                         image: NetworkImage(movie.image),
                                         fit: BoxFit.cover,
