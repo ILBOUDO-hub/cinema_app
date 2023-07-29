@@ -19,7 +19,7 @@ class TicketDetail extends StatefulWidget {
 
 class _TicketDetailState extends State<TicketDetail> {
   final TicketDetailController controller = Get.put(TicketDetailController());
-
+  int _count = 1;
   @override
   void initState() {
     super.initState();
@@ -28,7 +28,7 @@ class _TicketDetailState extends State<TicketDetail> {
   // ... Autres parties du code ...
   Widget _buildLeft(TypeTicket ticket) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(left: 50.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -42,7 +42,7 @@ class _TicketDetailState extends State<TicketDetail> {
             ),
           ),
           Text(
-            '${ticket.price} FCFA',
+            '${_count} x ${ticket.price} FCFA',
             style: const TextStyle(
               color: Colors.blue,
               fontSize: 16,
@@ -103,21 +103,40 @@ class _TicketDetailState extends State<TicketDetail> {
         bottomNavigationBar: Container(
           padding: EdgeInsets.zero,
           width: Get.width,
-          height: Get.height * 0.1,
-          decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+          height: Get.height * 0.11,
+          /* decoration: const BoxDecoration(color: Colors.white, boxShadow: [
             BoxShadow(offset: Offset(0, 0), blurRadius: 10, spreadRadius: 0)
-          ]),
+          ]),*/
           child: Center(
             child: Column(
               children: [
-                const Text(
+                /*const Text(
                   'Nombre de tickets',
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
-                      fontWeight: FontWeight.bold),
+                      //fontWeight: FontWeight.bold
+                      ),
+                ),*/
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                        heroTag: "Button1",
+                        child: Icon(Icons.add),
+                        onPressed: _incrementCount),
+                    Text(
+                      "${_count}",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    FloatingActionButton(
+                        heroTag: "Button2",
+                        child: Icon(Icons.remove),
+                        onPressed: _decrementCount),
+                  ],
                 ),
-                Container(
+                /*Container(
                   width: MediaQuery.of(context).size.width * 0.75,
                   height: MediaQuery.of(context).size.height * 0.06,
                   padding: const EdgeInsets.only(left: 8, right: 8),
@@ -140,13 +159,27 @@ class _TicketDetailState extends State<TicketDetail> {
                       // qte.value = value.toInt();
                     },
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _incrementCount() {
+    setState(() {
+      _count++;
+    });
+  }
+
+  void _decrementCount() {
+    if (_count > 1) {
+      setState(() {
+        _count--;
+      });
+    }
   }
 
   List<Widget> _buildTabs(List<TypeTicket> typeTickets) {
@@ -214,7 +247,7 @@ class _TicketDetailState extends State<TicketDetail> {
         tabViews.addAll(validDates.map((date) => Column(
               children: [
                 const SizedBox(
-                  height: 10, 
+                  height: 10,
                 ),
                 const Text(
                   "Choisissez votre ticket !",
@@ -224,15 +257,18 @@ class _TicketDetailState extends State<TicketDetail> {
                   height: 30,
                 ),
                 Center(
-                  child: TicketMaterial(
-                    colorBackground: Colors.white,
-                    height: 150,
-                    leftChild: _buildLeft(ticket),
-                    rightChild: _buildRight(),
-                    tapHandler: () {
-                      print('ON TAP');
-                      // Vous pouvez naviguer vers une autre page ici si nécessaire
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TicketMaterial(
+                      colorBackground: Colors.white,
+                      height: 150,
+                      leftChild: _buildLeft(ticket),
+                      rightChild: _buildRight(),
+                      tapHandler: () {
+                        print('ON TAP');
+                        // Vous pouvez naviguer vers une autre page ici si nécessaire
+                      },
+                    ),
                   ),
                 ),
               ],

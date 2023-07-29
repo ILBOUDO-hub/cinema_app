@@ -5,23 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MovieDetail extends StatelessWidget {
-  /*final imagePath, room, price, title, description, urlvideo, categorie;
-  //  isFavorite;
-  final _controller = PageController();
-  late List<TypeTicket> typeTickets;
   final Movie movie;
-  MovieDetail({
-    this.imagePath,
-    this.room,
-    this.price,
-    this.title,
-    this.description,
-    this.urlvideo,
-    this.categorie,
-    required List<TypeTicket> typeTickets
-    //this.isFavorite
-  });*/
-    final Movie movie;
 
   MovieDetail({super.key, required this.movie});
 
@@ -45,15 +29,8 @@ class MovieDetail extends StatelessWidget {
         children: <Widget>[
           Container(
             foregroundDecoration: const BoxDecoration(color: Colors.black26),
-            //  height: 400,
             width: double.infinity,
-            //  decoration: BoxDecoration(
-            //      borderRadius: BorderRadius.circular(10.0),
             child: Image.network(movie.image),
-            //child: NetworkImage(movie.image),
-            // image: DecorationImage(
-            //   image: NetworkImage(imagePath), fit: BoxFit.cover)),
-            //  child: NetworkImage(imagePath, fit: BoxFit.cover)
           ),
           SingleChildScrollView(
             padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
@@ -161,12 +138,12 @@ class MovieDetail extends StatelessWidget {
                             children: <Widget>[
                               Text(
                                 movie.price,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20.0),
                               ),
-                              Text(
+                              const Text(
                                 "/par séance",
                                 style: TextStyle(
                                     fontSize: 12.0, color: Colors.grey),
@@ -245,7 +222,7 @@ class MovieDetail extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => VideoPlayerScreen(
-                          imagePath:  movie.image,
+                          imagePath: movie.image,
                           price: movie.price,
                           title: movie.title,
                           room: movie.room,
@@ -275,21 +252,9 @@ class MovieDetail extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          //icon: const Icon(Icons.message_outlined),
           backgroundColor: Colors.blue,
           onPressed: () {
-            /*Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TicketDetail(
-                      imagePath: imagePath,
-                      price: price,
-                      title: title,
-                      room: room,
-                      description: description,
-                      urlvideo: urlvideo,
-                      typeTickets: typeTickets,
-                    )));*/
-                    
-Get.to(() => TicketDetail(movie: movie));
+            Get.to(() => TicketDetail(movie: movie));
           },
         ),
       ),
