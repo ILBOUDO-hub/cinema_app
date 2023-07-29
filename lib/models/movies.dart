@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Movie {
-  //DocumentReference<Map<String, dynamic>>? id;
+  String ?id;
   String title;
   String category;
   String description;
@@ -9,11 +7,9 @@ class Movie {
   String video;
   String price;
   String room;
-  DateTime endDate;
-  DateTime startDate;
+  List<TypeTicket> typeTickets;
 
   Movie({
-    //this.id,
     required this.category,
     required this.title,
     required this.image,
@@ -21,13 +17,21 @@ class Movie {
     required this.description,
     required this.price,
     required this.room,
-    required this.endDate,
-    required this.startDate,
+    required this.typeTickets,
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
+    List<dynamic>? typeTicketList = json['typeTickets'];
+
+    // Vérifier si la valeur est null ou une liste valide
+    if (typeTicketList == null) {
+      typeTicketList = [];
+    }
+
+    List<TypeTicket> typeTickets =
+        typeTicketList.map((json) => TypeTicket.fromJson(json)).toList();
+
     return Movie(
-      //id: json['id'] ?? '',
       title: json['title'] ?? '',
       image: json['image'] ?? '',
       description: json['description'] ?? '',
@@ -35,14 +39,12 @@ class Movie {
       category: json['category'] ?? '',
       price: json['price'] ?? '',
       room: json['room'] ?? '',
-      endDate: json['endDate'] ?? '',
-      startDate: json['startDate'] ?? '',
+      typeTickets: typeTickets,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      //'id': id,
       'title': title,
       'image': image,
       'description': description,
@@ -50,8 +52,39 @@ class Movie {
       'category': category,
       'price': price,
       'room': room,
-      'endDate': endDate,
-      'startDate': startDate,
+      'typeTickets': typeTickets.map((ticket) => ticket.toJson()).toList(),
+    };
+  }
+}
+
+class TypeTicket {
+  String id; // Nouvel attribut pour l'identifiant du ticket
+  DateTime dateDebut;
+  DateTime dateFin;
+  String price;
+
+  TypeTicket({
+    required this.id,
+    required this.dateDebut,
+    required this.dateFin,
+    required this.price,
+  });
+
+  factory TypeTicket.fromJson(Map<String, dynamic> json) {
+    return TypeTicket(
+      id: json['id'] ?? '', // Utilisez l'opérateur ?? pour fournir une valeur par défaut
+      dateDebut: json['dateDebut'].toDate(),
+      dateFin: json['dateFin'].toDate(),
+      price:  json['price'] ?? '', // Utilisez l'opérateur ?? pour fournir une valeur par défaut
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id, // Utilisez 'id' pour l'attribut 'id'
+      'dateDebut': dateDebut,
+      'dateFin': dateFin,
+      'price' : price,
     };
   }
 }

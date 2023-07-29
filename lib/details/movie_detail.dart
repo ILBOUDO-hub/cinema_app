@@ -1,23 +1,29 @@
 import 'package:cinema/details/ticket_detail.dart';
 import 'package:cinema/details/video_player.dart';
+import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MovieDetail extends StatelessWidget {
-  final imagePath, room, price, title, description, urlvideo, categorie;
+  /*final imagePath, room, price, title, description, urlvideo, categorie;
   //  isFavorite;
   final _controller = PageController();
+  late List<TypeTicket> typeTickets;
+  final Movie movie;
+  MovieDetail({
+    this.imagePath,
+    this.room,
+    this.price,
+    this.title,
+    this.description,
+    this.urlvideo,
+    this.categorie,
+    required List<TypeTicket> typeTickets
+    //this.isFavorite
+  });*/
+    final Movie movie;
 
-  MovieDetail(
-      {this.imagePath,
-      this.room,
-      this.price,
-      this.title,
-      this.description,
-      this.urlvideo,
-      this.categorie
-      //this.isFavorite
-      });
+  MovieDetail({super.key, required this.movie});
 
   bool isPressed = true;
   bool isPressed2 = true;
@@ -43,7 +49,8 @@ class MovieDetail extends StatelessWidget {
             width: double.infinity,
             //  decoration: BoxDecoration(
             //      borderRadius: BorderRadius.circular(10.0),
-            child: Image.network(imagePath),
+            child: Image.network(movie.image),
+            //child: NetworkImage(movie.image),
             // image: DecorationImage(
             //   image: NetworkImage(imagePath), fit: BoxFit.cover)),
             //  child: NetworkImage(imagePath, fit: BoxFit.cover)
@@ -57,7 +64,7 @@ class MovieDetail extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    title,
+                    movie.title,
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28.0,
@@ -142,7 +149,7 @@ class MovieDetail extends StatelessWidget {
                                       size: 16.0,
                                       color: Colors.grey,
                                     )),
-                                    TextSpan(text: room)
+                                    TextSpan(text: movie.room)
                                   ]),
                                   style: const TextStyle(
                                       color: Colors.grey, fontSize: 12.0),
@@ -152,7 +159,8 @@ class MovieDetail extends StatelessWidget {
                           ),
                           Column(
                             children: <Widget>[
-                              Text(price,
+                              Text(
+                                movie.price,
                                 style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
@@ -199,7 +207,7 @@ class MovieDetail extends StatelessWidget {
                       ),
                       const SizedBox(height: 10.0),
                       Text(
-                        description,
+                        movie.description,
                         textAlign: TextAlign.justify,
                         style: const TextStyle(
                             fontWeight: FontWeight.w300, fontSize: 14.0),
@@ -237,12 +245,12 @@ class MovieDetail extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => VideoPlayerScreen(
-                          imagePath: imagePath,
-                          price: price,
-                          title: title,
-                          room: room,
-                          description: description,
-                          urlvideo: urlvideo,
+                          imagePath:  movie.image,
+                          price: movie.price,
+                          title: movie.title,
+                          room: movie.room,
+                          description: movie.description,
+                          urlvideo: movie.video,
                           //isFavorite: gleinfo.isFavorite,
                         )));
               },
@@ -270,7 +278,7 @@ class MovieDetail extends StatelessWidget {
           //icon: const Icon(Icons.message_outlined),
           backgroundColor: Colors.blue,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            /*Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => TicketDetail(
                       imagePath: imagePath,
                       price: price,
@@ -278,7 +286,10 @@ class MovieDetail extends StatelessWidget {
                       room: room,
                       description: description,
                       urlvideo: urlvideo,
-                    )));
+                      typeTickets: typeTickets,
+                    )));*/
+                    
+Get.to(() => TicketDetail(movie: movie));
           },
         ),
       ),

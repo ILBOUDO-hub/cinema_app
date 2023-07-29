@@ -106,14 +106,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               child: Stack(
                 children: [
                   Container(
-                    height: 300,
-                    width: double.infinity,
-                    child: Chewie(controller: _chewieController)
-                  ),
+                      height: 500,
+                      width: double.infinity,
+                      child: Chewie(controller: _chewieController)),
                   Positioned.fill(
                     child: AnimatedOpacity(
                       opacity: _isPlaying ? 0.0 : 1.0,
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       child: Align(
                         alignment: Alignment.center,
                         child: Icon(
@@ -127,37 +126,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 ],
               ),
             ),
-            /*Row(
-              children: [
-                Text(
-                  '${_currentPosition.inMinutes}:${(_currentPosition.inSeconds % 60).toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(width: 10.0),
-                Expanded(
-                  child: VideoProgressIndicator(
-                    _videoPlayerController,
-                    allowScrubbing: true,
-                    colors: const VideoProgressColors(
-                      playedColor: Colors.red,
-                      bufferedColor: Colors.grey,
-                      backgroundColor: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10.0),
-                Text(
-                  '${_videoDuration.inMinutes}:${(_videoDuration.inSeconds % 60).toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),*/
           ],
         ),
       ),

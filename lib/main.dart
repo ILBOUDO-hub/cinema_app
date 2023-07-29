@@ -1,39 +1,46 @@
-import 'package:cinema/Home.dart';
-import 'package:cinema/accueil.dart';
-//import 'package:cinema/accueil.dart';
 import 'package:cinema/calendrier.dart';
-import 'package:cinema/controllers/moviesController.dart';
-import 'package:cinema/firebase_options.dart';
-//import 'package:cinema/login/login.dart';
+import 'package:cinema/controllers/ticketController.dart';
 import 'package:cinema/profil.dart';
-import 'package:cinema/tickets.dart';
 import 'package:cinema/welcome.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'details/video_player.dart';
-import 'details/video_player.dart';
-import 'login/otp.dart';
-import 'login/phone_auth.dart';
-import 'login/phone_auth.dart';
-import 'login/user.dart';
+import 'package:cinema/home.dart';
+import 'package:cinema/sign_in.dart';
 import 'package:get/get.dart';
 
-//import 'categories/movies.dart';
+import 'controllers/moviesController.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  Get.put(MoviesController());
-  runApp(
-    MaterialApp(
+  await Firebase.initializeApp();
+  Get.put(MoviesController()); //Pour utiliser mon controlleur partout dans mon code
+  Get.put(TicketDetailController());
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+  final _auth = FirebaseAuth.instance;
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: 'CinePlus',
       debugShowCheckedModeBanner: false,
-      title: 'Bottom Navigation Bar',
-      home: HomePage(),
-    ),
-  );
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: StreamBuilder<User?>(
+        stream: _auth.authStateChanges(),
+        builder: (context, snapshot) {
+          return snapshot.data == null ? const SignInView() : HomePage();
+          //return snapshot.data == null ? HomePage() : const Home();
+        },
+      ),
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -47,7 +54,7 @@ class HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     Welcome(),
     Calendar(),
-    Ticket(),
+    const Home(),
     Profil(),
   ];
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cinema/controllers/moviesController.dart';
 import 'package:cinema/details/movie_detail.dart';
 import 'package:cinema/models/movies.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 
 class Calendar extends StatefulWidget {
   final List<String> _items = [
@@ -35,17 +37,17 @@ class _CalendarState extends State<Calendar> {
     setState(() {});
   }
 
+  void _onDateSelected(DateTime selectedDate) {
+    moviesController.fetchMoviesByDate(selectedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // debugShowCheckedModeBanner: false,
-      // home: Scaffold(
       backgroundColor: const Color(0xFFFCFAF8),
       appBar: AppBar(
         elevation: 2,
-        title: const Text(
-          "CinePlus",
-        ),
+        title: const Text("CinePlus"),
         centerTitle: false,
         titleTextStyle: const TextStyle(
             fontSize: 30,
@@ -83,6 +85,7 @@ class _CalendarState extends State<Calendar> {
                           setState(() {
                             _selectedDate = date;
                           });
+                          _onDateSelected(date);
                         },
                         child: Container(
                           width: 70.0,
@@ -135,84 +138,91 @@ class _CalendarState extends State<Calendar> {
               Container(
                 margin: const EdgeInsets.all(10.0),
                 width: MediaQuery.of(context).size.width - 20.0,
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: moviesController.movies.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Movie movie = moviesController.movies[index];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MovieDetail(
-                              imagePath: movie.image,
-                              price: movie.price,
-                              title: movie.title,
-                              room: movie.room,
-                              description: movie.description,
-                              categorie: movie.category,
-                              urlvideo: movie.video,
+                child: Obx(() {
+                  if (moviesController.isLoading.value) {
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        color: Colors.blue,
+                        size: 50.0,
+                      ),
+                    );
+                  } else if (moviesController.selectedMovies.isEmpty) {
+                    // Afficher un message si aucun film ne correspond à la date sélectionnée
+                    return const Center(
+                      child: Text(
+                        "Aucun film disponible pour cette date.",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: moviesController.selectedMovies.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Movie movie = moviesController.selectedMovies[index];
+                        return InkWell(
+                          onTap: () {
+                            Get.to(() => MovieDetail(movie: movie));
+                          },
+                          child: Card(
+                            elevation: 1.0,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      image: DecorationImage(
+                                        image: NetworkImage(movie.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movie.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      movie.category.toString(),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      movie.room,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         );
                       },
-                      child: Card(
-                        elevation: 1.0,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  image: DecorationImage(
-                                    image: NetworkImage(movie.image),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  movie.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                const SizedBox(height: 10,),
-                                Text(
-                                  //'ACTION',
-                                  movie.category.toString(),
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(height: 10,),
-                                Text(
-                                  movie.room,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
                     );
-                  },
-                ),
+                  }
+                }),
               ),
             ],
           ),
         ],
       ),
     );
-    //);
   }
 
   String _getWeekday(int weekday) {

@@ -1,43 +1,57 @@
+import 'package:cinema/controllers/ticketController.dart';
 import 'package:cinema/details/payment.dart';
+import 'package:cinema/models/movies.dart';
+import 'package:cinema/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 import 'package:ticket_material/ticket_material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class TicketDetail extends StatefulWidget {
-  final imagePath,
-      assetPath2,
-      room,
-      price,
-      title,
-      description,
-      urlvideo,
-      categorie;
+  final Movie movie;
 
-  TicketDetail(
-      {this.imagePath,
-      this.assetPath2,
-      this.room,
-      this.price,
-      this.title,
-      this.description,
-      this.urlvideo,
-      this.categorie
-      //this.isFavorite
-      });
+  TicketDetail({required this.movie});
 
   @override
   State<TicketDetail> createState() => _TicketDetailState();
 }
 
 class _TicketDetailState extends State<TicketDetail> {
-  DateTime _selectedDate = DateTime.now();
-  List<Container> movieOscar = [];
+  final TicketDetailController controller = Get.put(TicketDetailController());
 
-  Widget _buildLeft() {
-    return Center(
-      child: Text(widget.title),
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // ... Autres parties du code ...
+  Widget _buildLeft(TypeTicket ticket) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+            '${widget.movie.title}',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '${ticket.price} FCFA',
+            style: const TextStyle(
+              color: Colors.blue,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // Ajoutez d'autres informations concernant le ticket ici si nécessaire
+        ],
+      ),
     );
   }
 
@@ -46,151 +60,57 @@ class _TicketDetailState extends State<TicketDetail> {
       // height: 100,
       width: 100,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-              image: AssetImage(widget.imagePath), fit: BoxFit.cover)),
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+            image: NetworkImage(widget.movie.image), fit: BoxFit.cover),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    List<TypeTicket> typeTickets = widget.movie.typeTickets;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          backgroundColor: const Color(0xFFFCFAF8),
-          appBar: AppBar(
-            title: const Text('Mes tickets'),
-            centerTitle: true,
-            titleTextStyle: const TextStyle(
-                fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
-            backgroundColor: Colors.blue,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () => Navigator.maybePop(context),
+        backgroundColor: const Color(0xFFFCFAF8),
+        appBar: AppBar(
+          title: const Text('Mes tickets'),
+          centerTitle: true,
+          titleTextStyle: const TextStyle(
+              fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+          backgroundColor: Colors.blue,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
             ),
+            onPressed: () => Navigator.maybePop(context),
           ),
-          body: Stack(children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 70.0,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 7,
-                      itemBuilder: (BuildContext context, int index) {
-                        DateTime date =
-                            DateTime.now().add(Duration(days: index));
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedDate = date;
-                            });
-                          },
-                          child: Container(
-                            width: 70.0,
-                            margin: const EdgeInsets.only(right: 10.0),
-                            decoration: BoxDecoration(
-                              color: _selectedDate.day == date.day
-                                  ? Colors.blue
-                                  : Color.fromARGB(255, 220, 219, 219),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${date.day}',
-                                  style: const TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  '${_getWeekday(date.weekday)}',
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: TicketMaterial(
-                            height: 140,
-                            colorBackground: Colors.blue,
-                            radiusBorder: 12,
-                            leftChild: _buildLeft(),
-                            rightChild: _buildRight(),
-                            tapHandler: () {
-                              print('ON TAP');
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PaymentDetail(
-                                        imagePath: widget.imagePath,
-                                        price: widget.price,
-                                        title: widget.title,
-                                        room: widget.room,
-                                        description: widget.description,
-                                        urlvideo: widget.urlvideo,
-                                      )));
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: TicketMaterial(
-                            height: 140,
-                            colorBackground: Colors.blue,
-                            radiusBorder: 12,
-                            leftChild: _buildLeft(),
-                            rightChild: _buildRight(),
-                            tapHandler: () {
-                              print('ON TAP');
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PaymentDetail(
-                                        imagePath: widget.imagePath,
-                                        price: widget.price,
-                                        title: widget.title,
-                                        room: widget.room,
-                                        description: widget.description,
-                                        urlvideo: widget.urlvideo,
-                                        //isFavorite: gleinfo.isFavorite,
-                                      )));
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
+          bottom: TabBar(
+            tabs: _buildTabs(typeTickets),
+            controller: controller.tabController,
+          ),
+        ),
+        body: PageView(
+          children: _buildTabView(typeTickets),
+          controller: controller.pageController,
+          onPageChanged: (index) {
+            controller.selectTabIndex(
+                index); // Synchronize the selected index between TabBar and PageView
+          },
+        ),
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.zero,
+          width: Get.width,
+          height: Get.height * 0.1,
+          decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(offset: Offset(0, 0), blurRadius: 10, spreadRadius: 0)
           ]),
-
-                    bottomNavigationBar: Container(
-            padding: EdgeInsets.zero,
-            width: Get.width,
-            height: Get.height * 0.1,
-            decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(offset: Offset(0, 0), blurRadius: 10, spreadRadius: 0)
-            ]),
-            child: Center(
-                child: Column(
+          child: Center(
+            child: Column(
               children: [
-                Text(
+                const Text(
                   'Nombre de tickets',
                   style: TextStyle(
                       color: Colors.black,
@@ -198,54 +118,133 @@ class _TicketDetailState extends State<TicketDetail> {
                       fontWeight: FontWeight.bold),
                 ),
                 Container(
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    padding: EdgeInsets.only(left: 8, right: 8),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(15)),
-                    child:  SpinBox(
-                    
-                          iconSize: 25,
-                          textStyle: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              disabledBorder: InputBorder.none),
-                          min: 1,
-                          max: 300,
-                          value: 1,
-                          onChanged: (value) {
-                            print(value);
-                           // qte.value = value.toInt();
-                          }),
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: SpinBox(
+                    iconSize: 25,
+                    textStyle: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      disabledBorder: InputBorder.none,
                     ),
+                    min: 1,
+                    max: 300,
+                    value: 1,
+                    onChanged: (value) {
+                      print(value);
+                      // qte.value = value.toInt();
+                    },
+                  ),
+                ),
               ],
-            )),
+            ),
           ),
-          ),
+        ),
+      ),
     );
   }
 
-  // Récupérer le jour de la semaine à partir de l'indice
-  String _getWeekday(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Lun';
-      case 2:
-        return 'Mar';
-      case 3:
-        return 'Mer';
-      case 4:
-        return 'Jeu';
-      case 5:
-        return 'Ven';
-      case 6:
-        return 'Sam';
-      case 7:
-        return 'Dim';
-      default:
-        return "Invalid day";
-    }
+  List<Widget> _buildTabs(List<TypeTicket> typeTickets) {
+    final List<Widget> tabs = [];
+
+    typeTickets.forEach((ticket) {
+      // Générer une liste de dates entre dateDebut et dateFin pour chaque ticket
+      final List<DateTime> dates = [];
+      DateTime currentDate = ticket.dateDebut;
+
+      while (currentDate.isBefore(ticket.dateFin) ||
+          currentDate.isAtSameMomentAs(ticket.dateFin)) {
+        dates.add(currentDate);
+        currentDate = currentDate.add(Duration(days: 1));
+      }
+
+      // Filtrer les dates pour ne garder que celles d'aujourd'hui jusqu'à dateFin inclus
+      final List<DateTime> validDates = dates
+          .where((date) =>
+              date.isAfter(DateTime.now().subtract(Duration(days: 1))))
+          .toList();
+
+      if (validDates.isNotEmpty) {
+        // Générer un onglet pour chaque date valide et l'ajouter à la liste des onglets pour ce ticket
+        final ticketTabs = validDates
+            .map((date) => Tab(
+                  text:
+                      'Jour ${validDates.indexOf(date) + 1}\n${DateFormat("EEEE, d MMMM").format(date)}',
+                ))
+            .toList();
+        tabs.addAll(ticketTabs);
+      } else {
+        // Si aucune date valide, générer un onglet avec une indication
+        tabs.add(Tab(
+          text: 'Aucune date disponible',
+        ));
+      }
+    });
+
+    return tabs;
+  }
+
+  List<Widget> _buildTabView(List<TypeTicket> typeTickets) {
+    final List<Widget> tabViews = [];
+
+    typeTickets.forEach((ticket) {
+      // Générer une liste de dates entre dateDebut et dateFin pour chaque ticket
+      final List<DateTime> dates = [];
+      DateTime currentDate = ticket.dateDebut;
+
+      while (currentDate.isBefore(ticket.dateFin) ||
+          currentDate.isAtSameMomentAs(ticket.dateFin)) {
+        dates.add(currentDate);
+        currentDate = currentDate.add(Duration(days: 1));
+      }
+
+      // Filtrer les dates pour ne garder que celles d'aujourd'hui jusqu'à dateFin inclus
+      final List<DateTime> validDates = dates
+          .where((date) =>
+              date.isAfter(DateTime.now().subtract(Duration(days: 1))))
+          .toList();
+
+      if (validDates.isNotEmpty) {
+        // Générer la vue associée à chaque date valide
+        tabViews.addAll(validDates.map((date) => Column(
+              children: [
+                const SizedBox(
+                  height: 10, 
+                ),
+                const Text(
+                  "Choisissez votre ticket !",
+                  style: TextStyle(fontSize: 20, fontFamily: 'Times New Roman'),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Center(
+                  child: TicketMaterial(
+                    colorBackground: Colors.white,
+                    height: 150,
+                    leftChild: _buildLeft(ticket),
+                    rightChild: _buildRight(),
+                    tapHandler: () {
+                      print('ON TAP');
+                      // Vous pouvez naviguer vers une autre page ici si nécessaire
+                    },
+                  ),
+                ),
+              ],
+            )));
+      } else {
+        // Si aucune date valide, générer une vue avec une indication
+        tabViews.add(Center(
+          child: Text('Aucune date disponible pour ce ticket'),
+        ));
+      }
+    });
+
+    return tabViews;
   }
 }
