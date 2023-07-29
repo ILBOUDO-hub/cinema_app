@@ -17,13 +17,14 @@ class TicketDetail extends StatefulWidget {
   State<TicketDetail> createState() => _TicketDetailState();
 }
 
-class _TicketDetailState extends State<TicketDetail> {
+class _TicketDetailState extends State<TicketDetail> with TickerProviderStateMixin{
   final TicketDetailController controller = Get.put(TicketDetailController());
   int _count = 1;
   @override
   void initState() {
     super.initState();
   }
+  
 
   // ... Autres parties du code ...
   Widget _buildLeft(TypeTicket ticket) {
@@ -211,7 +212,11 @@ class _TicketDetailState extends State<TicketDetail> {
                 ))
             .toList();
         tabs.addAll(ticketTabs);
+              // Mettez à jour la variable tabLength avec le nombre d'onglets générés pour ce ticket
+      controller.tabController = TabController(vsync: this, length: tabs.length);
       } else {
+      // Mettez à jour la variable tabLength avec le nombre d'onglets générés pour ce ticket
+      controller.tabController = TabController(vsync: this, length: tabs.length);
         // Si aucune date valide, générer un onglet avec une indication
         tabs.add(Tab(
           text: 'Aucune date disponible',
