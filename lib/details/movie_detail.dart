@@ -1,3 +1,4 @@
+import 'package:cinema/details/commentaire.dart';
 import 'package:cinema/details/ticket_detail.dart';
 import 'package:cinema/details/video_player.dart';
 import 'package:cinema/models/movies.dart';
@@ -155,7 +156,7 @@ class MovieDetail extends StatelessWidget {
                       const SizedBox(height: 30.0),
                       Container(
                         //padding: EdgeInsets.all(16.0),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("36 Commentaires",
@@ -164,12 +165,17 @@ class MovieDetail extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.0,
                                     color: Colors.black)),
-                            Expanded(
+                            TextButton(
+                              onPressed: () {
+                                Get.to(() => CommentPage(movieId: movie.title));
+                              },
                               child: Text(
-                                'Voir plus',
-                                textAlign: TextAlign.right,
+                                'Voir plus', // Le texte à afficher dans le bouton
                                 style: TextStyle(
-                                  fontSize: 16.0,
+                                  fontSize: 16.0, // La taille du texte
+                                  fontWeight: FontWeight
+                                      .bold, // Le poids du texte (gras)
+                                  color: Colors.blue, // La couleur du texte
                                 ),
                               ),
                             ),

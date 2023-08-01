@@ -41,69 +41,92 @@ class _ProfilSate extends State<Profil> {
             child: Column(
               children: [
                 const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                const Column(
                   children: [
-                    const Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 65.0,
-                          backgroundImage: AssetImage(
-                            'assets/images/perso.jfif',
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                        Text(
-                          'Auguste ILBOUDO',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    CircleAvatar(
+                      radius: 65.0,
+                      backgroundImage: AssetImage(
+                        'assets/images/perso.jfif',
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          color: Colors.lightBlueAccent,
-                          child: Text("02", style: TextStyle(fontSize: 40)),
-                        ),
-                        const Text(
-                          'Tickets',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          color: Colors.orangeAccent,
-                          child: Text("00", style: TextStyle(fontSize: 40)),
-                        ),
-                        const Text(
-                          'Favoris',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    SizedBox(height: 20.0),
+                    Text(
+                      'Auguste ILBOUDO',
+                      // "${(user?.phoneNumber ?? "")}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                Text("Numéro de téléphone: " + (user?.phoneNumber ?? "")),
-                Text("Uid: " + (user?.uid ?? "")),
-                 // ignore: prefer_interpolation_to_compose_strings
-                //Text("Nom: " + (user?.lastName ?? "")),
+                // Text("Numéro de téléphone: " + (user?.phoneNumber ?? "")),
+                //Text("Uid: " + (user?.uid ?? "")),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0, left: 8.0),
+                  child: Card(
+                      child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              //  color: Colors.orangeAccent,
+                              child: Text("03", style: TextStyle(fontSize: 20)),
+                            ),
+                            const Text(
+                              'Favoris',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              //  color: Colors.orangeAccent,
+                              child: Text("00", style: TextStyle(fontSize: 20)),
+                            ),
+                            const Text(
+                              'Ticket(s)',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              // color: Colors.orangeAccent,
+                              child: Text("00", style: TextStyle(fontSize: 20)),
+                            ),
+                            const Text(
+                              'Participation(s)',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+                ),
                 ListTile(
                   leading: const Icon(
                     Icons.account_circle,

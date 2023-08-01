@@ -1,4 +1,5 @@
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/controllers/commentController.dart';
 import 'package:cinema/controllers/ticketController.dart';
 import 'package:cinema/profil.dart';
 import 'package:cinema/welcome.dart';
@@ -14,8 +15,10 @@ import 'controllers/moviesController.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Get.put(MoviesController()); //Pour utiliser mon controlleur partout dans mon code
+  Get.put(
+      MoviesController()); //Pour utiliser mon controlleur partout dans mon code
   Get.put(TicketDetailController());
+  Get.put(CommentController());
   runApp(MyApp());
 }
 
