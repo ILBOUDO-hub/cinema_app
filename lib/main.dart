@@ -17,7 +17,7 @@ void main() async {
   await Firebase.initializeApp();
   Get.put(
       MoviesController()); //Pour utiliser mon controlleur partout dans mon code
-  Get.put(TicketDetailController());
+  //Get.put(TicketDetailController());
   Get.put(CommentController());
   runApp(MyApp());
 }

@@ -1,291 +1,310 @@
-import 'package:cinema/controllers/ticketController.dart';
 import 'package:cinema/details/payment.dart';
 import 'package:cinema/models/movies.dart';
-import 'package:cinema/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:ticket_material/ticket_material.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'package:cinema/controllers/moviesController.dart';
+import 'package:cinema/details/movie_detail.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TicketDetail extends StatefulWidget {
   final Movie movie;
+  int quantity;
 
-  TicketDetail({required this.movie});
+  TicketDetail({required this.movie, this.quantity = 1});
 
   @override
   State<TicketDetail> createState() => _TicketDetailState();
 }
 
-class _TicketDetailState extends State<TicketDetail> with TickerProviderStateMixin{
-  final TicketDetailController controller = Get.put(TicketDetailController());
-  int _count = 1;
+class _TicketDetailState extends State<TicketDetail>
+    with TickerProviderStateMixin {
+  MoviesController moviesController = MoviesController.instance;
+  DateTime _selectedDate = DateTime.now();
+  Ticket? _selectedTicket;
+
   @override
   void initState() {
     super.initState();
+    _onDateSelected(DateTime.now());
   }
-  
 
-  // ... Autres parties du code ...
-  Widget _buildLeft(TypeTicket ticket) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 50.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Future<void> _onDateSelected(DateTime selectedDate) async {
+    try {
+      await moviesController.fetchMoviesByDateTicket(selectedDate);
+    } catch (e) {
+      print(
+          'Erreur lors de la récupération des films pour la date sélectionnée : $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFFCFAF8),
+      appBar: AppBar(
+        elevation: 2,
+        title: const Text("Mes tickets"),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontFamily: "Times new roman",
+        ),
+        backgroundColor: Colors.blue,
+      ),
+      body: Stack(
         children: [
-          Text(
-            '${widget.movie.title}',
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+          ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 70.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 7,
+                    itemBuilder: (BuildContext context, int index) {
+                      DateTime date = DateTime.now().add(Duration(days: index));
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedDate = date;
+                          });
+                          moviesController.updateSelectedDate(
+                              date); // Mettre à jour la date sélectionnée dans le contrôleur
+                          _onDateSelected(date);
+                        },
+                        child: Container(
+                          width: 70.0,
+                          margin: const EdgeInsets.only(right: 10.0),
+                          decoration: BoxDecoration(
+                            color: _selectedDate.day == date.day
+                                ? Colors.blue
+                                : const Color.fromARGB(255, 220, 219, 219),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${date.day}',
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text(
+                                '${_getWeekday(date.weekday)}',
+                                style: const TextStyle(fontSize: 16.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                width: MediaQuery.of(context).size.width - 20.0,
+                child: Obx(() {
+                  if (moviesController.isLoading.value) {
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        color: Colors.blue,
+                        size: 50.0,
+                      ),
+                    );
+                  } else if (moviesController.selectedMovies.isEmpty) {
+                    // Afficher un message si aucun film ne correspond à la date sélectionnée
+                    return const Center(
+                      child: Text(
+                        "Aucun ticket disponible pour cette date.",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: widget.movie.typeTickets
+                          .length, // Utilisez widget.movie.typeTickets.length au lieu de widget.movie.typeTickets
+                      itemBuilder: (BuildContext context, int index) {
+                        TypeTicket ticket = widget.movie.typeTickets[
+                            index]; // Récupérez le ticket à l'index donné
+                        return InkWell(
+                          onTap: () {
+                            // Get.to(() => MovieDetail(movie: widget.movie));
+                            Get.to(() => PaymentDetail(
+                                  movie: widget.movie,
+                                  quantity: widget.quantity,
+                                  //selectedTicket: _selectedTicket!,
+                                ));
+                          },
+                          child: Card(
+                            elevation: 1.0,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      image: DecorationImage(
+                                        image: NetworkImage(widget.movie.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.movie.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Prix: ${widget.movie.price}",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      setState(() {
+                        if (widget.quantity > 1) {
+                          widget.quantity--;
+                        }
+                      });
+                    },
+                  ),
+                  Text(
+                    '${widget.quantity}',
+                    style: const TextStyle(fontSize: 20.0),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        widget.quantity++;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_selectedTicket != null) {
+                        // Afficher la page de paiement avec le ticket sélectionné et la quantité
+                        Get.to(() => PaymentDetail(
+                              movie: widget.movie,
+                              quantity: widget.quantity,
+                              // selectedTicket: _selectedTicket!,
+                            ));
+                      } else {
+                        // Afficher un message si aucun ticket n'est disponible pour le film sélectionné
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Aucun ticket disponible'),
+                              content: const Text(
+                                  'Aucun ticket n\'est disponible pour ce film à la date sélectionnée.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      child: Text(
+                        'Réserver',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Text(
-            '${_count} x ${ticket.price} FCFA',
-            style: const TextStyle(
-              color: Colors.blue,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          // Ajoutez d'autres informations concernant le ticket ici si nécessaire
         ],
       ),
     );
   }
 
-  Widget _buildRight() {
-    return Container(
-      // height: 100,
-      width: 100,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-            image: NetworkImage(widget.movie.image), fit: BoxFit.cover),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<TypeTicket> typeTickets = widget.movie.typeTickets;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: const Color(0xFFFCFAF8),
-        appBar: AppBar(
-          title: const Text('Mes tickets'),
-          centerTitle: true,
-          titleTextStyle: const TextStyle(
-              fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
-          backgroundColor: Colors.blue,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () => Navigator.maybePop(context),
-          ),
-          bottom: TabBar(
-            tabs: _buildTabs(typeTickets),
-            controller: controller.tabController,
-          ),
-        ),
-        body: PageView(
-          children: _buildTabView(typeTickets),
-          controller: controller.pageController,
-          onPageChanged: (index) {
-            controller.selectTabIndex(
-                index); // Synchronize the selected index between TabBar and PageView
-          },
-        ),
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.zero,
-          width: Get.width,
-          height: Get.height * 0.11,
-          /* decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(offset: Offset(0, 0), blurRadius: 10, spreadRadius: 0)
-          ]),*/
-          child: Center(
-            child: Column(
-              children: [
-                /*const Text(
-                  'Nombre de tickets',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      //fontWeight: FontWeight.bold
-                      ),
-                ),*/
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FloatingActionButton(
-                        heroTag: "Button1",
-                        child: Icon(Icons.add),
-                        onPressed: _incrementCount),
-                    Text(
-                      "${_count}",
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    FloatingActionButton(
-                        heroTag: "Button2",
-                        child: Icon(Icons.remove),
-                        onPressed: _decrementCount),
-                  ],
-                ),
-                /*Container(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  padding: const EdgeInsets.only(left: 8, right: 8),
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: SpinBox(
-                    iconSize: 25,
-                    textStyle: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                    ),
-                    min: 1,
-                    max: 300,
-                    value: 1,
-                    onChanged: (value) {
-                      print(value);
-                      // qte.value = value.toInt();
-                    },
-                  ),
-                ),*/
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _incrementCount() {
-    setState(() {
-      _count++;
-    });
-  }
-
-  void _decrementCount() {
-    if (_count > 1) {
-      setState(() {
-        _count--;
-      });
+  String _getWeekday(int weekday) {
+    switch (weekday) {
+      case 1:
+        return 'Lun';
+      case 2:
+        return 'Mar';
+      case 3:
+        return 'Mer';
+      case 4:
+        return 'Jeu';
+      case 5:
+        return 'Ven';
+      case 6:
+        return 'Sam';
+      case 7:
+        return 'Dim';
+      default:
+        return '';
     }
   }
+}
 
-  List<Widget> _buildTabs(List<TypeTicket> typeTickets) {
-    final List<Widget> tabs = [];
+class Ticket {
+  final String ticketTitle;
+  int quantity;
 
-    typeTickets.forEach((ticket) {
-      // Générer une liste de dates entre dateDebut et dateFin pour chaque ticket
-      final List<DateTime> dates = [];
-      DateTime currentDate = ticket.dateDebut;
-
-      while (currentDate.isBefore(ticket.dateFin) ||
-          currentDate.isAtSameMomentAs(ticket.dateFin)) {
-        dates.add(currentDate);
-        currentDate = currentDate.add(Duration(days: 1));
-      }
-
-      // Filtrer les dates pour ne garder que celles d'aujourd'hui jusqu'à dateFin inclus
-      final List<DateTime> validDates = dates
-          .where((date) =>
-              date.isAfter(DateTime.now().subtract(Duration(days: 1))))
-          .toList();
-
-      if (validDates.isNotEmpty) {
-        // Générer un onglet pour chaque date valide et l'ajouter à la liste des onglets pour ce ticket
-        final ticketTabs = validDates
-            .map((date) => Tab(
-                  text:
-                      'Jour ${validDates.indexOf(date) + 1}\n${DateFormat("EEEE, d MMMM").format(date)}',
-                ))
-            .toList();
-        tabs.addAll(ticketTabs);
-              // Mettez à jour la variable tabLength avec le nombre d'onglets générés pour ce ticket
-      controller.tabController = TabController(vsync: this, length: tabs.length);
-      } else {
-      // Mettez à jour la variable tabLength avec le nombre d'onglets générés pour ce ticket
-      controller.tabController = TabController(vsync: this, length: tabs.length);
-        // Si aucune date valide, générer un onglet avec une indication
-        tabs.add(Tab(
-          text: 'Aucune date disponible',
-        ));
-      }
-    });
-
-    return tabs;
-  }
-
-  List<Widget> _buildTabView(List<TypeTicket> typeTickets) {
-    final List<Widget> tabViews = [];
-
-    typeTickets.forEach((ticket) {
-      // Générer une liste de dates entre dateDebut et dateFin pour chaque ticket
-      final List<DateTime> dates = [];
-      DateTime currentDate = ticket.dateDebut;
-
-      while (currentDate.isBefore(ticket.dateFin) ||
-          currentDate.isAtSameMomentAs(ticket.dateFin)) {
-        dates.add(currentDate);
-        currentDate = currentDate.add(Duration(days: 1));
-      }
-
-      // Filtrer les dates pour ne garder que celles d'aujourd'hui jusqu'à dateFin inclus
-      final List<DateTime> validDates = dates
-          .where((date) =>
-              date.isAfter(DateTime.now().subtract(Duration(days: 1))))
-          .toList();
-
-      if (validDates.isNotEmpty) {
-        // Générer la vue associée à chaque date valide
-        tabViews.addAll(validDates.map((date) => Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  "Choisissez votre ticket !",
-                  style: TextStyle(fontSize: 20, fontFamily: 'Times New Roman'),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: TicketMaterial(
-                      colorBackground: Colors.white,
-                      height: 150,
-                      leftChild: _buildLeft(ticket),
-                      rightChild: _buildRight(),
-                      tapHandler: () {
-                        print('ON TAP');
-                        // Vous pouvez naviguer vers une autre page ici si nécessaire
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            )));
-      } else {
-        // Si aucune date valide, générer une vue avec une indication
-        tabViews.add(Center(
-          child: Text('Aucune date disponible pour ce ticket'),
-        ));
-      }
-    });
-
-    return tabViews;
-  }
+  Ticket({required this.ticketTitle, this.quantity = 1});
 }

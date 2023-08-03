@@ -62,12 +62,15 @@ class TypeTicket {
   DateTime dateDebut;
   DateTime dateFin;
   String price;
+    bool isAvailable; // Nouvelle propriété pour indiquer si le ticket est disponible pour la date sélectionnée
+
 
   TypeTicket({
     required this.id,
     required this.dateDebut,
     required this.dateFin,
     required this.price,
+        this.isAvailable = true, // Par défaut, le ticket est considéré comme disponible
   });
 
   factory TypeTicket.fromJson(Map<String, dynamic> json) {
@@ -88,3 +91,4 @@ class TypeTicket {
     };
   }
 }
+

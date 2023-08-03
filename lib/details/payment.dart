@@ -1,29 +1,22 @@
+import 'package:cinema/controllers/moviesController.dart';
+import 'package:cinema/details/ticket_detail.dart';
+import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-// ignore: must_be_immutable
-class PaymentDetail extends StatelessWidget {
-  final imagePath,
-      assetPath2,
-      room,
-      price,
-      title,
-      description,
-      urlvideo,
-      categorie;
-  //  isFavorite;
+class PaymentDetail extends StatefulWidget {
+  final Movie movie;
+  int quantity;
 
-  PaymentDetail(
-      {super.key, this.imagePath,
-      this.assetPath2,
-      this.room,
-      this.price,
-      this.title,
-      this.description,
-      this.urlvideo,
-      this.categorie
-      //this.isFavorite
-      });
+  PaymentDetail({required this.movie, this.quantity = 1});
 
+  @override
+  State<PaymentDetail> createState() => _PaymentDetailState();
+}
+
+class _PaymentDetailState extends State<PaymentDetail> {
+  //double montant = this.movie.price;
+  //var montant = widget.movie.price * widget.quantity;
   bool isPressed = true;
   bool isPressed2 = true;
   bool isHighlighted = true;
@@ -58,7 +51,14 @@ class PaymentDetail extends StatelessWidget {
               height: 15,
             ),
             Text(
-              room,
+              widget.movie.title,
+              style: TextStyle(fontSize: 15),
+              textAlign: TextAlign.start,
+            ),
+            //double montant =  {widget.movie.price} * 3,
+            Text(
+              //{widget.movie.price} * {widget.quantity} as double,
+              " ${widget.movie.price}*${widget.quantity} ",
               style: TextStyle(fontSize: 15),
               textAlign: TextAlign.start,
             ),

@@ -13,6 +13,7 @@ class MoviesController extends GetxController {
   final RxList<Movie> movies = <Movie>[].obs;
   final RxBool isLoading = false.obs;
   final RxList<Movie> selectedMovies = <Movie>[].obs;
+  final Rx<DateTime> selectedDate = DateTime.now().obs;
 
   MoviesController();
 
@@ -45,14 +46,14 @@ class MoviesController extends GetxController {
 
         // Vérifier si la date de fin du film n'est pas dépassée
         if (!_isMovieExpired(movie)) {
-                // Récupérer l'URL de téléchargement de l'image depuis Firebase Storage
-      final String downloadURL = await _storage.ref(movie.image).getDownloadURL();
+          // Récupérer l'URL de téléchargement de l'image depuis Firebase Storage
+          final String downloadURL = await _storage.ref(movie.image).getDownloadURL();
 
-      // Mettre à jour l'URL de l'image dans l'objet Movie avec une URL absolue
-      movie.image = downloadURL;
+          // Mettre à jour l'URL de l'image dans l'objet Movie avec une URL absolue
+          movie.image = downloadURL;
 
-      String videoURL = await _storage.ref(movie.video).getDownloadURL();
-      movie.video = videoURL;
+          String videoURL = await _storage.ref(movie.video).getDownloadURL();
+          movie.video = videoURL;
 
           movieList.add(movie);
         }
@@ -81,6 +82,66 @@ class MoviesController extends GetxController {
     }
 
     return true; // Le film est expiré si on n'a trouvé aucun typeTicket avec une date de fin non dépassée
+  }
+
+  // Méthode pour mettre à jour la date sélectionnée
+  void updateSelectedDate(DateTime selectedDate) {
+    this.selectedDate.value = selectedDate;
+  }
+
+  Future<void> fetchMoviesByDateTicket(DateTime selectedDate) async {
+    try {
+      isLoading.value = true;
+
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance.collection("movies").get();
+
+      final List<Movie> movieListDay = [];
+
+      for (var doc in querySnapshot.docs) {
+        final movie = Movie.fromJson(doc.data());
+
+        final QuerySnapshot<Map<String, dynamic>> typeTicketSnapshot =
+            await doc.reference.collection("typeTicket").get();
+
+        final List<TypeTicket> typeTickets = [];
+
+        for (var typeTicketDoc in typeTicketSnapshot.docs) {
+          final ticket = TypeTicket.fromJson(typeTicketDoc.data());
+          typeTickets.add(ticket);
+        }
+
+        movie.typeTickets = typeTickets;
+
+        // Vérifier si la date de fin du film n'est pas dépassée
+        if (!_isMovieExpired(movie)) {
+          final String downloadURL =
+              await FirebaseStorage.instance.ref(movie.image).getDownloadURL();
+          movie.image = downloadURL;
+
+          String videoURL =
+              await FirebaseStorage.instance.ref(movie.video).getDownloadURL();
+          movie.video = videoURL;
+
+          // Filter the typeTickets by selectedDate
+          final filteredTickets = movie.typeTickets.where((typeTicket) {
+            return selectedDate.isAfter(typeTicket.dateDebut) &&
+                selectedDate.isBefore(typeTicket.dateFin);
+          }).toList();
+
+          movie.typeTickets = filteredTickets;
+
+          if (filteredTickets.isNotEmpty) {
+            movieListDay.add(movie);
+          }
+        }
+      }
+
+      selectedMovies.value = movieListDay;
+      isLoading.value = false;
+    } catch (e) {
+      print('Erreur lors de la récupération des films : $e');
+    }
   }
 
 
@@ -138,4 +199,6 @@ class MoviesController extends GetxController {
       print('Erreur lors de la récupération des films : $e');
     }
   }
+
 }
+

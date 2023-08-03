@@ -27,8 +27,8 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   final MoviesController myController = Get.find<MoviesController>();
     // Déclarez le contrôleur d'onglet ici
-  final TicketDetailController ticketDetailController =
-    Get.put(TicketDetailController());
+ // final TicketDetailController ticketDetailController =
+   // Get.put(TicketDetailController());
 
       
   List<String> categories = [
