@@ -179,6 +179,13 @@ class _TicketDetailState extends State<TicketDetail>
                                       "Prix: ${widget.movie.price}",
                                       style: const TextStyle(fontSize: 16),
                                     ),
+                                                                        const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "${widget.quantity} Ticket(s)",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
                                   ],
                                 ),
                               ],

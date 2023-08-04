@@ -1,31 +1,30 @@
-import 'package:cinema/details/sucess_paid.dart';
 import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-class PaymentDetail extends StatefulWidget {
-  final Movie movie;
-  int quantity;
+class Paid extends StatefulWidget {
+ // final Movie movie;
+  //int quantity;
 
-  PaymentDetail({required this.movie, this.quantity = 1});
+  //Paid({required this.movie, this.quantity = 1});
 
   @override
-  State<PaymentDetail> createState() => _PaymentDetailState();
+  State<Paid> createState() => _PaidState();
 }
 
-class _PaymentDetailState extends State<PaymentDetail> {
+class _PaidState extends State<Paid> {
   int montant = 0;
 
   @override
   void initState() {
     super.initState();
-    montant = widget.movie.price * widget.quantity;
+//    montant = widget.movie.price * widget.quantity;
   }
 
   Future<void> makePayment(String phoneNumber, String otp) async {
-    const String apiUrl = 'https://shark-app-xeyhn.ondigitalocean.app/pay/control';
+    final String apiUrl =
+        'https://shark-app-xeyhn.ondigitalocean.app/pay/control';
 
     Map<String, dynamic> requestBody = {
       "api_key": "aT8CkVcrs6b1UrA3kc5lx636tVZL3PNv",
@@ -41,12 +40,17 @@ class _PaymentDetailState extends State<PaymentDetail> {
       if (response.statusCode == 200) {
         // La requête a réussi, vous pouvez traiter la réponse ici.
         print("Réponse : ${response.body}");
-        print("Réponse : Réussi");
-        Get.to(Paid());
+
+        // Composer et lancer le code USSD
+        final String ussdCode = "*144*10*05690560*$montant#";
+        if (await canLaunch("tel:$ussdCode")) {
+          await launch("tel:$ussdCode");
+        } else {
+          print("Impossible de lancer le code USSD");
+        }
       } else {
         // La requête a échoué, traitez l'erreur ici.
         print("Erreur : ${response.statusCode}");
-        print("Réponse : Erreur");
       }
     } catch (e) {
       // Une erreur s'est produite lors de la requête.
@@ -78,11 +82,11 @@ class _PaymentDetailState extends State<PaymentDetail> {
           const SizedBox(
             height: 15,
           ),
-          Text(
-            widget.movie.title,
+          /*Text(
+           // widget.movie.title,
             style: const TextStyle(fontSize: 15),
             textAlign: TextAlign.start,
-          ),
+          ),*/
           Text(
             //"$montant",
             montant.toString(),
@@ -111,18 +115,16 @@ class _PaymentDetailState extends State<PaymentDetail> {
                             //  Text("*144*10*05690560*${montant}#"),
                             TextButton(
                               onPressed: () async {
-                                String ussdCode =
-                                    "*144*10*05690560*$montant#";
-                                String url =
-                                    'tel:${Uri.encodeComponent(ussdCode)}';
+                                String ussdCode = "*144*10*05690560*$montant#";
+                                   String url = 'tel:${Uri.encodeComponent(ussdCode)}';
 
                                 // Lancer le code USSD directement
                                 await launch(url);
                               },
-                              child: Text("*144*10*05690560*$montant#"),
+                              child:  Text("*144*10*05690560*$montant#"),
                             ),
                             TextField(
-                              decoration: const InputDecoration(
+                              decoration:const InputDecoration(
                                   labelText: 'Numéro de téléphone'),
                               onChanged: (value) {
                                 phoneNumber = value;
@@ -131,7 +133,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
                             const SizedBox(height: 10),
                             TextField(
                               decoration:
-                                  const InputDecoration(labelText: 'Code OTP'),
+                                 const  InputDecoration(labelText: 'Code OTP'),
                               onChanged: (value) {
                                 otp = value;
                               },
