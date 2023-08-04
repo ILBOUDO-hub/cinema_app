@@ -297,28 +297,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          movie.category,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 30),
-                                        Text(
-                                          '${movie.price} FCFA',
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      movie.category,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),

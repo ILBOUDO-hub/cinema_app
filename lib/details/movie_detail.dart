@@ -138,7 +138,8 @@ class MovieDetail extends StatelessWidget {
                           Column(
                             children: <Widget>[
                               Text(
-                                movie.price,
+                                "${movie.price}",
+                               // movie.price as String,
                                 style: const TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,

@@ -5,7 +5,7 @@ class Movie {
   String description;
   String image;
   String video;
-  String price;
+  int price;
   String room;
   List<TypeTicket> typeTickets;
 
