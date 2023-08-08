@@ -1,14 +1,15 @@
+import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cinema/models/movies.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MoviesController extends GetxController {
   static MoviesController instance = Get.find();
   CollectionReference<Map<String, dynamic>> db =
       FirebaseFirestore.instance.collection("movies");
 
-  FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final RxList<Movie> movies = <Movie>[].obs;
   final RxBool isLoading = false.obs;
@@ -20,6 +21,7 @@ class MoviesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    isLoading.value = true;
     fetchMovies();
   }
 
@@ -46,13 +48,19 @@ class MoviesController extends GetxController {
 
         // Vérifier si la date de fin du film n'est pas dépassée
         if (!_isMovieExpired(movie)) {
-          // Récupérer l'URL de téléchargement de l'image depuis Firebase Storage
-          final String downloadURL = await _storage.ref(movie.image).getDownloadURL();
+          // Récupération de l'URL de téléchargement de l'image depuis Firebase Storage
+          final String downloadURL = await _storage
+              .ref(movie.image)
+              .getDownloadURL()
+              .whenComplete(() => isLoading.value = false);
 
           // Mettre à jour l'URL de l'image dans l'objet Movie avec une URL absolue
           movie.image = downloadURL;
 
-          String videoURL = await _storage.ref(movie.video).getDownloadURL();
+          String videoURL = await _storage
+              .ref(movie.video)
+              .getDownloadURL()
+              .whenComplete(() => isLoading.value = false);
           movie.video = videoURL;
 
           movieList.add(movie);
@@ -81,7 +89,7 @@ class MoviesController extends GetxController {
       }
     }
 
-    return true; // Le film est expiré si on n'a trouvé aucun typeTicket avec une date de fin non dépassée
+    return true; 
   }
 
   // Méthode pour mettre à jour la date sélectionnée

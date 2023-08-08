@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class Paid extends StatefulWidget {
- // final Movie movie;
+  // final Movie movie;
   //int quantity;
 
   //Paid({required this.movie, this.quantity = 1});
@@ -116,15 +116,16 @@ class _PaidState extends State<Paid> {
                             TextButton(
                               onPressed: () async {
                                 String ussdCode = "*144*10*05690560*$montant#";
-                                   String url = 'tel:${Uri.encodeComponent(ussdCode)}';
+                                String url =
+                                    'tel:${Uri.encodeComponent(ussdCode)}';
 
                                 // Lancer le code USSD directement
                                 await launch(url);
                               },
-                              child:  Text("*144*10*05690560*$montant#"),
+                              child: Text("*144*10*05690560*$montant#"),
                             ),
                             TextField(
-                              decoration:const InputDecoration(
+                              decoration: const InputDecoration(
                                   labelText: 'Numéro de téléphone'),
                               onChanged: (value) {
                                 phoneNumber = value;
@@ -133,7 +134,7 @@ class _PaidState extends State<Paid> {
                             const SizedBox(height: 10),
                             TextField(
                               decoration:
-                                 const  InputDecoration(labelText: 'Code OTP'),
+                                  const InputDecoration(labelText: 'Code OTP'),
                               onChanged: (value) {
                                 otp = value;
                               },
@@ -156,9 +157,26 @@ class _PaidState extends State<Paid> {
                 },
                 child: Container(
                   width: 150,
+                  height: 100,
                   child: AspectRatio(
                     aspectRatio: 1 / 1,
                     child: Image.asset('assets/logos/orangemoney.jpg'),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                
+                    },
+                  
+                
+                child: Container(
+                  width: 150,
+                  height: 200,
+                  color: Colors.amber,
+                  child: AspectRatio(
+                    aspectRatio: 1 / 1,
+                    child: ClipRect(child: Image.asset('assets/logos/moovmoney.jpg')),
                   ),
                 ),
               ),

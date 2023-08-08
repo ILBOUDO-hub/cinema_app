@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/details/payment.dart';
 import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
@@ -141,6 +142,7 @@ class _TicketDetailState extends State<TicketDetail>
                             Get.to(() => PaymentDetail(
                                   movie: widget.movie,
                                   quantity: widget.quantity,
+                                  price: ticket.price,
                                   //selectedTicket: _selectedTicket!,
                                 ));
                           },
@@ -151,14 +153,21 @@ class _TicketDetailState extends State<TicketDetail>
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(
-                                    height: 100,
-                                    width: 100,
+                                    height: 120,
+                                    width: 120,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      image: DecorationImage(
-                                        image: NetworkImage(widget.movie.image),
-                                        fit: BoxFit.cover,
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.movie.image,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                         const SpinKitCircle(
+                                        color: Colors.blue,
+                                        size: 50.0,
                                       ),
+                                      errorWidget: (context, url, error) =>
+                                         const  Icon(Icons.error),
                                     ),
                                   ),
                                 ),
@@ -166,7 +175,7 @@ class _TicketDetailState extends State<TicketDetail>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      widget.movie.title,
+                                      ticket.name,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -176,10 +185,32 @@ class _TicketDetailState extends State<TicketDetail>
                                       height: 10,
                                     ),
                                     Text(
-                                      "Prix: ${widget.movie.price}",
+                                      "Prix: ${ticket.price}",
                                       style: const TextStyle(fontSize: 16),
                                     ),
-                                                                        const SizedBox(
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueAccent,
+                                        borderRadius: BorderRadius.circular(
+                                            10), // Définir le rayon des bords arrondis
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.watch_later_outlined),
+                                            Text(
+                                              ticket.time.toString(),
+                                              style: const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Text(
@@ -199,6 +230,8 @@ class _TicketDetailState extends State<TicketDetail>
               ),
             ],
           ),
+
+
           Positioned(
             bottom: 0,
             left: 0,
@@ -235,11 +268,12 @@ class _TicketDetailState extends State<TicketDetail>
                     onPressed: () async {
                       if (_selectedTicket != null) {
                         // Afficher la page de paiement avec le ticket sélectionné et la quantité
-                        Get.to(() => PaymentDetail(
+                      /*  Get.to(() => PaymentDetail(
                               movie: widget.movie,
                               quantity: widget.quantity,
+                               price: ticket.price,
                               // selectedTicket: _selectedTicket!,
-                            ));
+                            ));*/
                       } else {
                         // Afficher un message si aucun ticket n'est disponible pour le film sélectionné
                         showDialog(

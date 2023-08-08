@@ -1,4 +1,5 @@
 //import 'package:cinema/categories/movies.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/controllers/moviesController.dart';
 import 'package:cinema/controllers/ticketController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,11 +27,8 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   final MoviesController myController = Get.find<MoviesController>();
-    // Déclarez le contrôleur d'onglet ici
- // final TicketDetailController ticketDetailController =
-   // Get.put(TicketDetailController());
+  MoviesController moviesController = MoviesController.instance;
 
-      
   List<String> categories = [
     'Recommandé',
     'Africain',
@@ -46,6 +44,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
     'Africain',
     'Comedie',
     'Romance',
+    'Horreur',
   ];
 
   int selectedIndex = 0;
@@ -122,7 +121,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   ],
                 ),
               ),
-              const SizedBox(height: 15.0),
+              const SizedBox(height: 8.0),
               Padding(
                 padding: const EdgeInsets.only(right: 0),
                 child: Container(
@@ -216,7 +215,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       // Afficher une indication de chargement
-                      return SpinKitCircle(
+                      return const SpinKitCircle(
                         color: Colors.blue,
                         size: 50.0,
                       );
@@ -258,20 +257,6 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                             return GestureDetector(
                               onTap: () {
                                 Get.to(MovieDetail(movie: movie));
-                                /*Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MovieDetail(
-                                      imagePath: movie.image,
-                                      price: movie.price,
-                                      title: movie.title,
-                                      room: movie.room,
-                                      description: movie.description,
-                                      categorie: movie.category,
-                                      urlvideo: movie.video,
-                                    ),
-                                  ),
-                                );*/
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10),
@@ -283,10 +268,21 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                       width: 200,
                                       decoration: BoxDecoration(
                                         borderRadius:
+                                            BorderRadius.circular(50.0),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
                                             BorderRadius.circular(10.0),
-                                        image: DecorationImage(
-                                          image: NetworkImage(movie.image),
+                                        child: CachedNetworkImage(
+                                          imageUrl: movie.image,
                                           fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              const SpinKitCircle(
+                                            color: Colors.blue,
+                                            size: 50.0,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                         ),
                                       ),
                                     ),
@@ -324,7 +320,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      "A venir...",
+                      "Tendances en ce moment",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -343,7 +339,68 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 ),
               ),
 
-              const SizedBox(height: 10.0),
+               ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: moviesController.selectedMovies.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Movie movie = moviesController.selectedMovies[index];
+                        return InkWell(
+                          onTap: () {
+                            Get.to(() => MovieDetail(movie: movie));
+                          },
+                          child: Card(
+                            elevation: 1.0,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      image: DecorationImage(
+                                        image: NetworkImage(movie.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movie.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      movie.category.toString(),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      movie.room,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+              /*const SizedBox(height: 10.0),
               Container(
                 height: 310,
                 child: FutureBuilder(
@@ -368,21 +425,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                           final movie = myController.movies[index];
                           return GestureDetector(
                             onTap: () {
-                                Get.to(MovieDetail(movie: movie));
-                              /*Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MovieDetail(
-                                    imagePath: movie.image,
-                                    price: movie.price,
-                                    title: movie.title,
-                                    room: movie.room,
-                                    description: movie.description,
-                                    categorie: movie.category,
-                                    urlvideo: movie.video,
-                                  ),
-                                ),
-                              );*/
+                              Get.to(MovieDetail(movie: movie));
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
@@ -393,10 +436,21 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                     height: 250,
                                     width: 200,
                                     decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    ),
+                                    child: ClipRRect(
+                                      // Utilisation de ClipRRect pour les bords arrondis
                                       borderRadius: BorderRadius.circular(10.0),
-                                      image: DecorationImage(
-                                        image: NetworkImage(movie.image),
+                                      child: CachedNetworkImage(
+                                        imageUrl: movie.image,
                                         fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            SpinKitCircle(
+                                          color: Colors.blue,
+                                          size: 50.0,
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
                                       ),
                                     ),
                                   ),
@@ -422,7 +476,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                     }
                   },
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

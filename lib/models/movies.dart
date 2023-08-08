@@ -1,5 +1,4 @@
 class Movie {
-  String ?id;
   String title;
   String category;
   String description;
@@ -58,36 +57,37 @@ class Movie {
 }
 
 class TypeTicket {
-  String id; // Nouvel attribut pour l'identifiant du ticket
   DateTime dateDebut;
   DateTime dateFin;
   String price;
-    bool isAvailable; // Nouvelle propriété pour indiquer si le ticket est disponible pour la date sélectionnée
-
+  String name;
+  String time;
 
   TypeTicket({
-    required this.id,
     required this.dateDebut,
     required this.dateFin,
     required this.price,
-        this.isAvailable = true, // Par défaut, le ticket est considéré comme disponible
+    required this.name,
+    required this.time,
   });
 
   factory TypeTicket.fromJson(Map<String, dynamic> json) {
     return TypeTicket(
-      id: json['id'] ?? '', // Utilisez l'opérateur ?? pour fournir une valeur par défaut
       dateDebut: json['dateDebut'].toDate(),
       dateFin: json['dateFin'].toDate(),
-      price:  json['price'] ?? '', // Utilisez l'opérateur ?? pour fournir une valeur par défaut
+      price:  json['price'] ?? '', 
+      name:  json['name'] ?? '',
+      time: json['time'] ?? '', 
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id, // Utilisez 'id' pour l'attribut 'id'
       'dateDebut': dateDebut,
       'dateFin': dateFin,
       'price' : price,
+      'name' : name,
+      'time' : time,
     };
   }
 }

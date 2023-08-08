@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/details/commentaire.dart';
 import 'package:cinema/details/ticket_detail.dart';
 import 'package:cinema/details/video_player.dart';
 import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MovieDetail extends StatelessWidget {
   final Movie movie;
@@ -33,6 +35,21 @@ class MovieDetail extends StatelessWidget {
             width: double.infinity,
             child: Image.network(movie.image),
           ),
+                        Container(
+               
+                foregroundDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: movie.image,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => SpinKitCircle(
+                    color: Colors.blue,
+                    size: 50.0,
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
           SingleChildScrollView(
             padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
             child: Column(
@@ -160,7 +177,7 @@ class MovieDetail extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("36 Commentaires",
+                            Text("04 Commentaires",
                                 style: TextStyle(
                                     fontFamily: 'Varela',
                                     fontWeight: FontWeight.bold,

@@ -1,4 +1,7 @@
 import 'package:cinema/function.dart';
+import 'package:cinema/parametres/assistance.dart';
+import 'package:cinema/parametres/favoris.dart';
+import 'package:cinema/parametres/politique.dart';
 import 'package:flutter/material.dart';
 
 class Profil extends StatefulWidget {
@@ -94,7 +97,7 @@ class _ProfilSate extends State<Profil> {
                             Container(
                               padding: EdgeInsets.all(10),
                               //  color: Colors.orangeAccent,
-                              child: Text("00", style: TextStyle(fontSize: 20)),
+                              child: Text("02", style: TextStyle(fontSize: 20)),
                             ),
                             const Text(
                               'Ticket(s)',
@@ -152,12 +155,12 @@ class _ProfilSate extends State<Profil> {
                       style: TextStyle(fontSize: 18.0, color: Colors.black)),
                   onTap: () {
                     // Do something
-                    /*setState(() {
+                    setState(() {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
                         return Favoris();
                       }));
-                    });*/
+                    });
                   },
                 ),
                 ListTile(
@@ -166,12 +169,12 @@ class _ProfilSate extends State<Profil> {
                       style: TextStyle(fontSize: 18.0, color: Colors.black)),
                   onTap: () {
                     // Do something
-                    /*setState(() {
+                    setState(() {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
                         return Privacy();
                       }));
-                    });*/
+                    });
                   },
                 ),
                 ListTile(
@@ -181,12 +184,12 @@ class _ProfilSate extends State<Profil> {
                       style: TextStyle(fontSize: 18.0, color: Colors.black)),
                   onTap: () {
                     // Do something
-                    /*setState(() {
+                    setState(() {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
                         return Assistance();
                       }));
-                    });*/
+                    });
                   },
                 ),
                 ListTile(

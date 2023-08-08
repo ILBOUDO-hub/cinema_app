@@ -49,7 +49,7 @@ Future<void> validateOtp(String smsCode, String verificationId, String phoneNumb
         // Créez une référence à la collection 'users' dans Firebase Firestore
         final usersRef = FirebaseFirestore.instance.collection('users');
 
-        // Utilisez la méthode "add" pour ajouter les données et générer automatiquement un ID
+        // La méthode pour ajouter les données et générer automatiquement un ID
         await usersRef.add({
           'phone': phoneNumber,
           // Ajoutez d'autres champs nécessaires pour les autres informations de l'utilisateur
