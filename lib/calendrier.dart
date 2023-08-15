@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cinema/controllers/moviesController.dart';
+import 'package:cinema/controllers/moviesTest.dart';
 import 'package:cinema/details/movie_detail.dart';
-import 'package:cinema/models/movies.dart';
+import 'package:cinema/models/moviesTest.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
@@ -22,14 +22,18 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   MoviesController moviesController = MoviesController.instance;
-
   String _selectedItem = 'Tous';
   DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    fetchMovies();
+    fetchMoviesAndCalendrier();
+  }
+
+  Future<void> fetchMoviesAndCalendrier() async {
+    await fetchMovies(); // Fetch all movies
+    moviesController.fetchCalendrier(_selectedDate); // Fetch movies for selected date
   }
 
   Future<void> fetchMovies() async {
@@ -38,7 +42,10 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _onDateSelected(DateTime selectedDate) {
-    moviesController.fetchMoviesByDate(selectedDate);
+    setState(() {
+      _selectedDate = selectedDate;
+    });
+    moviesController.fetchCalendrier(selectedDate);
   }
 
   @override

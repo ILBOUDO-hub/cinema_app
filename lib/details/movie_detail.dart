@@ -2,31 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/details/commentaire.dart';
 import 'package:cinema/details/ticket_detail.dart';
 import 'package:cinema/details/video_player.dart';
-import 'package:cinema/models/movies.dart';
+import 'package:cinema/models/moviesTest.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:cinema/controllers/ticketController.dart';
 
 class MovieDetail extends StatelessWidget {
   final Movie movie;
 
-  MovieDetail({super.key, required this.movie});
+  MovieDetail({required this.movie});
 
-  bool isPressed = true;
-  bool isPressed2 = true;
-  bool isHighlighted = true;
+  final TicketsController ticketsController = TicketsController.instance;
+
   @override
   Widget build(BuildContext context) {
-    Rx<DateTime> _selectedDate = Rx<DateTime>(DateTime.now());
-    final _availableTimes = RxList<String>([
-      '10:00',
-      '11:00',
-      '12:00',
-      '13:00'
-    ]); //Liste des heures de projections disponibles
-    final _selectedTime =
-        _availableTimes[0].obs; //Selectionne le premier element par defaut
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -35,21 +25,20 @@ class MovieDetail extends StatelessWidget {
             width: double.infinity,
             child: Image.network(movie.image),
           ),
-                        Container(
-               
-                foregroundDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: movie.image,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => SpinKitCircle(
-                    color: Colors.blue,
-                    size: 50.0,
-                  ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+          Container(
+            foregroundDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: CachedNetworkImage(
+              imageUrl: movie.image,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => SpinKitCircle(
+                color: Colors.blue,
+                size: 50.0,
               ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          ),
           SingleChildScrollView(
             padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
             child: Column(
@@ -156,7 +145,7 @@ class MovieDetail extends StatelessWidget {
                             children: <Widget>[
                               Text(
                                 "${movie.price}",
-                               // movie.price as String,
+                                // movie.price as String,
                                 style: const TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,

@@ -8,13 +8,15 @@ import 'package:cinema/sign_in.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'controllers/moviesController.dart';
+import 'controllers/moviesTest.dart';
 import 'package:cinema/controllers/commentController.dart';
+import 'controllers/ticketController.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Get.put(MoviesController());
   Get.put(CommentController());
+  Get.put(TicketsController());
   runApp(MyApp());
 }
 
