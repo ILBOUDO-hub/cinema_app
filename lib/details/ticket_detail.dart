@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cinema/details/payment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -19,7 +20,7 @@ class TicketDetail extends StatefulWidget {
 class _TicketDetailState extends State<TicketDetail> {
   DateTime _selectedDate = DateTime.now();
   late List<Ticket> ticketsForSelectedDate = [];
-
+  int _count = 1;
   @override
   void initState() {
     super.initState();
@@ -133,7 +134,7 @@ class _TicketDetailState extends State<TicketDetail> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.movie,
                           size: 60,
                           color: Colors.grey,
@@ -156,74 +157,83 @@ class _TicketDetailState extends State<TicketDetail> {
                     itemCount: ticketsForSelectedDate.length,
                     itemBuilder: (BuildContext context, int index) {
                       final ticket = ticketsForSelectedDate[index];
-                      return Card(
-                        elevation: 1.0,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                height: 120,
-                                width: 120,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: widget.movie.image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      const SpinKitCircle(
-                                    color: Colors.blue,
-                                    size: 50.0,
+                      return InkWell(
+                        onTap: () {
+                            Get.to(() => PaymentDetail(idMovies : widget.movie.idMovies, price:ticket.price, quantity:_count));
+                        },
+                        child: Card(
+                          elevation: 1.0,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Container(
+                                  height: 120,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.movie.image,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const SpinKitCircle(
+                                      color: Colors.blue,
+                                      size: 50.0,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ticket.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Prix: ${ticket.price}",
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(
-                                      10,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    ticket.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                     ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.watch_later_outlined),
-                                        Text(
-                                          ticket.time.toString(),
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      ],
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Prix: ${ticket.price}",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius: BorderRadius.circular(
+                                        10,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.watch_later_outlined),
+                                          Text(
+                                            ticket.time.toString(),
+                                            style: const TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Text(
+                                    '${_count} ticket(s)',
+                                    style: const TextStyle(fontSize: 20.0),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -242,34 +252,88 @@ class _TicketDetailState extends State<TicketDetail> {
           child: Center(
             child: Column(
               children: [
-                Text(
-                  'Nombre de tickets',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  padding: EdgeInsets.only(left: 8, right: 8),
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: SpinBox(
-                    iconSize: 25,
-                    textStyle:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        disabledBorder: InputBorder.none),
-                    min: 1,
-                    max: 300,
-                    value: 1,
-                    onChanged: (value) {
-                      print(value);
-                      // qte.value = value.toInt();
-                    },
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (_count > 1) {
+                                _count--;
+                              }
+                            });
+                          },
+                        ),
+                        Text(
+                          '${_count}',
+                          style: const TextStyle(fontSize: 20.0),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              _count++;
+                            });
+                          },
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            // if (_selectedTicket != null) {
+                            // Afficher la page de paiement avec le ticket sélectionné et la quantité
+                            /*  Get.to(() => PaymentDetail(
+                              movie: widget.movie,
+                              quantity: widget.quantity,
+                               price: ticket.price,
+                              // selectedTicket: _selectedTicket!,
+                            ));*/
+                            //  } else {
+                            // Afficher un message si aucun ticket n'est disponible pour le film sélectionné
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Aucun ticket disponible'),
+                                  content: const Text(
+                                      'Aucun ticket n\'est disponible pour ce film à la date sélectionnée.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            // }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                            child: Text(
+                              'Réserver',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -278,6 +342,20 @@ class _TicketDetailState extends State<TicketDetail> {
         ),
       ),
     );
+  }
+
+  void _incrementCount() {
+    setState(() {
+      _count++;
+    });
+  }
+
+  void _decrementCount() {
+    if (_count > 1) {
+      setState(() {
+        _count--;
+      });
+    }
   }
 
   String _getWeekday(int weekday) {

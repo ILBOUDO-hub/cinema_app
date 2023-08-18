@@ -6,16 +6,17 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends StatefulWidget {
-  final Movie movie;
-  int quantity;
+  final idMovies, price, quantity;
 
-  PaymentDetail({required this.movie, this.quantity = 1, required String price});
+  PaymentDetail({
+    required this.idMovies,
+    required this.price,
+    required this.quantity,
+  });
 
   @override
   State<PaymentDetail> createState() => _PaymentDetailState();
 }
-
-//class PaymentDetail extends StatelessWidget {
 
 class _PaymentDetailState extends State<PaymentDetail> {
   int montant = 0;
@@ -23,7 +24,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
   @override
   void initState() {
     super.initState();
-    //montant = widget.movie.typeTickets.price * widget.quantity;
+    montant = widget.price * widget.quantity;
   }
 
   Future<void> makePayment(String phoneNumber, String otp) async {
@@ -44,7 +45,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
       if (response.statusCode == 200) {
         // La requête a réussi, vous pouvez traiter la réponse ici.
         print("Réponse : ${response.body}");
-
+        print("Paiement reussi");
         // Composer et lancer le code USSD
         final String ussdCode = "*144*10*05690560*$montant#";
         if (await canLaunch("tel:$ussdCode")) {
@@ -86,11 +87,11 @@ class _PaymentDetailState extends State<PaymentDetail> {
             SizedBox(
               height: 15,
             ),
-            Text(
+            /* Text(
               widget.movie.title,
               style: TextStyle(fontSize: 15),
               textAlign: TextAlign.start,
-            ),
+            ),*/
             SizedBox(
               height: 15,
             ),
