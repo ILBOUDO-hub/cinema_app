@@ -63,16 +63,6 @@ class _VerificationOtpState extends State<VerificationOtp> {
     }, autoRetrieval: (v) {});
   }
 
-  /*void onVerifySmsCode() async {
-    loading = true;
-    setState(() {});
-    await validateOtp(smsCode, widget.verificationId);
-    loading = true;
-    setState(() {});
-    Navigator.of(context).pop();
-    print("Vérification éfectué avec succès");
-  }*/
-
   void onVerifySmsCode() async {
     loading = true;
     setState(() {});

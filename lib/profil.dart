@@ -1,8 +1,11 @@
+import 'package:cinema/controllers/userController.dart';
 import 'package:cinema/function.dart';
 import 'package:cinema/parametres/assistance.dart';
 import 'package:cinema/parametres/favoris.dart';
 import 'package:cinema/parametres/politique.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:cinema/models/users.dart';
 
 class Profil extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilSate extends State<Profil> {
+   final UserController userController = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,7 +48,7 @@ class _ProfilSate extends State<Profil> {
             child: Column(
               children: [
                 const SizedBox(height: 15),
-                const Column(
+                Column(
                   children: [
                     CircleAvatar(
                       radius: 65.0,
@@ -53,15 +57,37 @@ class _ProfilSate extends State<Profil> {
                       ),
                     ),
                     SizedBox(height: 20.0),
-                    Text(
-                      'Auguste ILBOUDO',
+                 /*   Text(
+                       userController.user?.firstname ?? '',
+                     // 'Auguste ILBOUDO',
                       // "${(user?.phoneNumber ?? "")}",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
+                    ),*/
+                    Obx(() {
+  return Text(
+    userController.user?.lastName ?? 'Utilisateur non connecté',
+    style: TextStyle(
+      color: Colors.black,
+      fontSize: 16.0,
+      fontWeight: FontWeight.bold,
+    ),
+  );
+}),
+                    Obx(() {
+  return Text(
+    userController.user?.phoneNumber ?? 'Utilisateur non connecté',
+    style: TextStyle(
+      color: Colors.black,
+      fontSize: 16.0,
+      fontWeight: FontWeight.bold,
+    ),
+  );
+}),
+
                   ],
                 ),
                 const SizedBox(height: 10),

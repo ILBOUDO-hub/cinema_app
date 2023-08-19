@@ -1,5 +1,7 @@
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/controllers/userController.dart';
 import 'package:cinema/profil.dart';
+import 'package:cinema/tickets.dart';
 import 'package:cinema/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/home.dart';
@@ -11,12 +13,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'controllers/moviesTest.dart';
 import 'package:cinema/controllers/commentController.dart';
 import 'controllers/ticketController.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Get.put(MoviesController());
   Get.put(CommentController());
   Get.put(TicketsController());
+  Get.put(UserController());
   runApp(MyApp());
 }
 
@@ -55,7 +59,7 @@ class HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     Welcome(),
     Calendar(),
-    const Home(),
+    Ticket(),
     Profil(),
   ];
 
