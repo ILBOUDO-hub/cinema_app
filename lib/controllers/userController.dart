@@ -6,7 +6,8 @@ import '../models/users.dart';
 
 class UserController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final CollectionReference _usersRef = FirebaseFirestore.instance.collection('users');
+  final CollectionReference _usersRef =
+      FirebaseFirestore.instance.collection('users');
 
   Rx<CustomUser?> _firebaseUser = Rx<CustomUser?>(null);
   CustomUser? get user => _firebaseUser.value;
@@ -22,9 +23,13 @@ class UserController extends GetxController {
             .map((snapshot) => snapshot.docs)
             .map((docs) {
           if (docs.isNotEmpty) {
+            // Récupérez le tableau de préférences
+            final preferences = docs[0]['preferences'] as List<dynamic>;
             return CustomUser(
               phoneNumber: user.phoneNumber ?? '',
               lastName: docs[0]['lastName'] ?? '',
+              preferences: preferences.cast<
+                  String>(), // Assurez-vous que les préférences sont des chaînes
             );
           }
           return null;

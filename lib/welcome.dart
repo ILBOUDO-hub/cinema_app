@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cinema/controllers/userController.dart';
 import 'package:get/get.dart';
 
 import 'controllers/moviesTest.dart';
 import 'models/moviesTest.dart';
 import 'package:flutter/material.dart';
 
-import 'details/movie_detail.dart';
 import 'details/movie_detail.dart';
 
 class Welcome extends StatefulWidget {
@@ -22,6 +22,8 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
+  final UserController userController = Get.find<UserController>();
+
   List<String> categories = [
     'Recommandé',
     'Africain',
@@ -167,7 +169,73 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
 
                     if (selectedCategoryIndex == 0) {
                       // Afficher tous les films si "Tous" est sélectionné
-                      filteredMovies = MoviesController.instance.movies;
+                      // filteredMovies = MoviesController.instance.movies;
+                      final recommendedMovies = MoviesController.instance.movies
+                          .where((movie) =>
+                              userController.user?.preferences
+                                  .contains(movie.category) ??
+                              false)
+                          .toList();
+
+                      if (recommendedMovies.isEmpty) {
+                        return const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.movie),
+                              SizedBox(height: 10),
+                              Text(
+                                  "Aucun film recommandé pour vos préférences"),
+                            ],
+                          ),
+                        );
+                      }
+                                          return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount:  recommendedMovies.length,
+                      itemBuilder: (context, index) {
+                        final movie =  recommendedMovies[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // Naviguer vers la page de détails du film
+                            Get.to(
+                              () => MovieDetail(movie: movie),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 250,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          movie.image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  movie.title,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  movie.category,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                     } else {
                       // Filtrer les films par catégorie sélectionnée
                       final selectedCategory =
@@ -178,7 +246,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                     }
                     if (filteredMovies.isEmpty) {
                       // Aucun film disponible pour la catégorie sélectionnée
-                      return const  Center(
+                      return const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -189,6 +257,8 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         ),
                       );
                     }
+
+
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: filteredMovies.length,
