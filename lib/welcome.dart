@@ -190,52 +190,52 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                           ),
                         );
                       }
-                                          return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount:  recommendedMovies.length,
-                      itemBuilder: (context, index) {
-                        final movie =  recommendedMovies[index];
-                        return GestureDetector(
-                          onTap: () {
-                            // Naviguer vers la page de détails du film
-                            Get.to(
-                              () => MovieDetail(movie: movie),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 250,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                          movie.image),
-                                      fit: BoxFit.cover,
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: recommendedMovies.length,
+                        itemBuilder: (context, index) {
+                          final movie = recommendedMovies[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Naviguer vers la page de détails du film
+                              Get.to(
+                                () => MovieDetail(movie: movie),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 250,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                            movie.image),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  movie.title,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                  Text(
+                                    movie.title,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  movie.category,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                                  Text(
+                                    movie.category,
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
+                          );
+                        },
+                      );
                     } else {
                       // Filtrer les films par catégorie sélectionnée
                       final selectedCategory =
@@ -257,8 +257,6 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         ),
                       );
                     }
-
-
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: filteredMovies.length,
@@ -272,7 +270,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                             );
                           },
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -290,14 +288,14 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                                 ),
                                 Text(
                                   movie.title,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   movie.category,
-                                  style: TextStyle(color: Colors.grey),
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),

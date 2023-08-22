@@ -1,95 +1,103 @@
-import 'package:cinema/controllers/commentController.dart';
-import 'package:cinema/function.dart';
-import 'package:cinema/models/comments.dart';
+import 'package:cinema/controllers/userController.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-class CommentPage extends StatelessWidget {
+class CommentPage extends StatefulWidget {
   final String movieId;
-  final CommentController commentController = Get.put(CommentController());
-  final TextEditingController newCommentController = TextEditingController();
 
   CommentPage({required this.movieId});
+
+  @override
+  _CommentPageState createState() => _CommentPageState();
+}
+
+class _CommentPageState extends State<CommentPage> {
+  final UserController userController = Get.find<UserController>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+  final CollectionReference commentsCollection =
+      FirebaseFirestore.instance.collection('comments');
+
+  void _postComment() {
+    final String name =
+        userController.user?.firstName ?? 'Utilisateur non connecté';
+    final String message = _messageController.text.trim();
+
+    if (name.isNotEmpty && message.isNotEmpty) {
+      commentsCollection.add({
+        'name': name,
+        'message': message,
+        'movieId': widget.movieId,
+      });
+
+      _messageController.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Commentaires'),
-        centerTitle: true,
+        title: const Text('Laisser un commentaire'),
       ),
       body: Column(
         children: [
           Expanded(
-            child: FutureBuilder<List<Comment>>(
-              future: commentController.getCommentsForMovie(movieId),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: commentsCollection
+                  .where('movieId', isEqualTo: widget.movieId)
+                  .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                        'Une erreur est survenue lors du chargement des commentaires'),
-                  );
-                } else {
-                  final List<Comment> comments = snapshot.data ?? [];
-                  if (comments.isEmpty) {
-                    return Center(
-                      child: Text('Aucun commentaire pour ce film'),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: comments.length,
-                      itemBuilder: (context, index) {
-                        final Comment comment = comments[index];
-                        return ListTile(
-                          subtitle: Text(comment.text),
-                          title: Text(
-                            '${comment.userId}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
+                if (snapshot.hasError) {
+                  return const Center(
+                      child: Text('Erreur de chargement des commentaires.'));
                 }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final comments = snapshot.data!.docs;
+
+                return ListView.builder(
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      final comment =
+                          comments[index].data() as Map<String, dynamic>;
+                      final name = comment['name'] ?? '';
+                      final message = comment['message'] ?? '';
+                      return ListTile(
+                        subtitle: Text(message,style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),),
+                        title: Text(
+                          name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      );
+                    });
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
+              padding: const EdgeInsets.all(16.0),
+              child: Row(children: [
                 Expanded(
                   child: TextField(
-                    controller: newCommentController,
-                    decoration: InputDecoration(
-                      hintText: 'Entrez votre commentaire...',
-                    ),
+                    controller: _messageController,
+                    decoration: const InputDecoration(labelText: 'Message'),
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    String commentText = newCommentController.text;
-                    // Utilisez le CommentController pour ajouter le commentaire
-                    await commentController.addCommentForMovie(
-                      movieId,
-                      (user?.uid ?? ""), // Remplacez par l'ID de l'utilisateur
-                      commentText,
-                    );
-                    // Effacez le champ de saisie après avoir ajouté le commentaire
-                    newCommentController.clear();
-                  },
-                  child: Text('Envoyer'),
+                  onPressed: _postComment,
+                  child: const Text('Envoyer'),
                 ),
-              ],
-            ),
-          ),
+              ]))
         ],
       ),
     );

@@ -69,7 +69,7 @@ class _ProfilSate extends State<Profil> {
                     ),*/
                     Obx(() {
   return Text(
-    userController.user?.lastName ?? 'Utilisateur non connecté',
+    userController.user?.firstName ?? 'Utilisateur non connecté',
     style: TextStyle(
       color: Colors.black,
       fontSize: 16.0,

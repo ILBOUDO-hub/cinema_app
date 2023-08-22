@@ -28,6 +28,7 @@ class UserController extends GetxController {
             return CustomUser(
               phoneNumber: user.phoneNumber ?? '',
               lastName: docs[0]['lastName'] ?? '',
+              firstName: docs[0]['firstName'] ?? '',
               preferences: preferences.cast<
                   String>(), // Assurez-vous que les préférences sont des chaînes
             );

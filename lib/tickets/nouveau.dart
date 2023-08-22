@@ -19,104 +19,98 @@ class Nouveau extends StatelessWidget {
           children: [
             const SizedBox(height: 100.0),
             Obx(() {
-              if (nouveauController.isLoading.value) {
-                return const CircularProgressIndicator();
-              } else {
-                if (nouveauController.userTickets.isEmpty) {
-                  return const Text("Vous n'avez pas de ticket");
-                } else {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: nouveauController.userTickets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final ticket = nouveauController.userTickets[index];
-                      final associatedMovie =
-                          moviesController.movies.firstWhere(
-                        (movie) => movie.idMovies == ticket.idMovies,
-                        // orElse: () => Movie(idMovies: -1, image: '')
-                      );
+              final userTickets = nouveauController.userTickets.value; // Accédez aux données à l'intérieur de l'observable
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: userTickets.length, // Utilisez la variable userTickets
+                itemBuilder: (BuildContext context, int index) {
+                  final ticket = userTickets[index]; // Utilisez la variable userTickets
+                  final associatedMovie = moviesController.movies.firstWhere(
+                    (movie) => movie.idMovies == ticket.idMovies,
+                    /*  orElse: () => Movie(
+                            idMovies: "",
+                            title: "Film non trouvé",
+                            image: "lien_de_l'image_du_film_non_trouvé"),*/
+                  );
 
-                      return InkWell(
-                        onTap: () {
-                          // TODO: Naviguer vers la page de détails du ticket
-                        },
-                        child: Card(
-                          elevation: 1.0,
-                          child: Row(
+                  return InkWell(
+                    onTap: () {
+                      // TODO: Naviguer vers la page de détails du ticket
+                    },
+                    child: Card(
+                      elevation: 1.0,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              height: 120,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: associatedMovie.image,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    const SpinKitCircle(
+                                  color: Colors.blue,
+                                  size: 50.0,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Container(
-                                  height: 120,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
+                              Text(
+                                associatedMovie.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Prix: ${ticket.time}",
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blueAccent,
+                                  borderRadius: BorderRadius.circular(
+                                    10,
                                   ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: associatedMovie.image,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const SpinKitCircle(
-                                      color: Colors.blue,
-                                      size: 50.0,
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.watch_later_outlined),
+                                      Text(
+                                        ticket.time.toString(),
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    ticket.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Prix: ${ticket.time}",
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius: BorderRadius.circular(
-                                        10,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.watch_later_outlined),
-                                          Text(
-                                            ticket.time.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ],
                           ),
-                        ),
-                      );
-                    },
+                        ],
+                      ),
+                    ),
                   );
-                }
-              }
+                },
+              );
             }),
             const SizedBox(height: 20.0),
           ],

@@ -4,60 +4,71 @@ import 'package:get/get.dart';
 
 class NouveauController extends GetxController {
   final UserController userController = Get.find<UserController>();
-  final isLoading = true.obs;
-  final userTickets = <Ticket>[].obs;
+  final CollectionReference bookingRef =
+      FirebaseFirestore.instance.collection('booking');
+  final CollectionReference ticketRef =
+      FirebaseFirestore.instance.collection('tickets');
+
+  Rx<List<Ticket>> userTickets = Rx<List<Ticket>>([]);
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUserTickets();
+  }
 
   Future<void> fetchUserTickets() async {
-    try {
-      isLoading.value = true;
+    final currentUser = userController.user?.phoneNumber;
+    if (currentUser != null) {
+      final bookingsSnapshot =
+          await bookingRef.where('phone', isEqualTo: currentUser).get();
 
-      QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance
-          .collection('booking')
-          .where('phone', isEqualTo: userController.user?.phoneNumber ?? "")
-          .get();
+      final bookingDocs = bookingsSnapshot.docs;
 
-      List<String> bookedTicketIds = bookingSnapshot.docs
-          .map((bookingDoc) => bookingDoc['idMovies'] as String)
-          .toList();
+      if (bookingDocs.isNotEmpty) {
+        final userTicketIds = bookingDocs[0]['idTicket'] as List<dynamic>;
 
-      userTickets.clear();
-
-      for (String idMovies in bookedTicketIds) {
-        DocumentSnapshot ticketSnapshot = await FirebaseFirestore.instance
-            .collection('tickets')
-            .doc(idMovies)
-            .get();
-
-        if (ticketSnapshot.exists) {
-          Ticket ticket = Ticket.fromSnapshot(ticketSnapshot);
-          userTickets.add(ticket);
-        }
+        final userTicketsData = await Future.wait(
+          userTicketIds.map((ticketId) async {
+            final ticketSnapshot = await ticketRef.doc(ticketId).get();
+            if (ticketSnapshot.exists) {
+              return Ticket.fromMap(
+                  ticketSnapshot.data() as Map<String, dynamic>);
+            }
+            return null;
+          }),
+        );
+        userTickets.value = userTicketsData
+            .where((ticket) => ticket != null)
+            .toList()
+            .cast<Ticket>();
       }
-    } catch (error) {
-      print('Erreur lors de la récupération des tickets: $error');
-    } finally {
-      isLoading.value = false;
     }
   }
 }
 
 class Ticket {
-  final int idMovies;
+  final String idMovies;
+  final String phone;
   final String name;
   final String time;
+  // ... d'autres propriétés de Ticket
 
   Ticket({
     required this.idMovies,
+    required this.phone,
     required this.name,
     required this.time,
+    // ... autres propriétés de Ticket
   });
 
-  factory Ticket.fromSnapshot(DocumentSnapshot snapshot) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  factory Ticket.fromMap(Map<String, dynamic> map) {
     return Ticket(
-      idMovies: data['idMovies'] as int,
-      name: data['name'] as String,
-      time: data['time'] as String,
+      idMovies: map['idMovies'] ?? '',
+      phone: map['phone'] ?? '',
+      name: map['name'] ?? '',
+      time: map['time'] ?? '',
+      // ... initialisez d'autres propriétés de Ticket à partir du map
     );
   }
 }

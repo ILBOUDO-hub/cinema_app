@@ -3,6 +3,7 @@ import 'package:cinema/details/commentaire.dart';
 import 'package:cinema/details/ticket_detail.dart';
 import 'package:cinema/details/video_player.dart';
 import 'package:cinema/models/moviesTest.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -32,11 +33,11 @@ class MovieDetail extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: movie.image,
               fit: BoxFit.cover,
-              placeholder: (context, url) => SpinKitCircle(
+              placeholder: (context, url) => const SpinKitCircle(
                 color: Colors.blue,
                 size: 50.0,
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
           SingleChildScrollView(
@@ -46,7 +47,7 @@ class MovieDetail extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 250),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     movie.title,
                     style: const TextStyle(
@@ -162,33 +163,57 @@ class MovieDetail extends StatelessWidget {
                       ),
                       const SizedBox(height: 30.0),
                       Container(
-                        //padding: EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("04 Commentaires",
-                                style: TextStyle(
-                                    fontFamily: 'Varela',
-                                    fontWeight: FontWeight.bold,
+                          child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('comments')
+                            .where('movieId', isEqualTo: movie.title)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text(
+                                'Erreur de chargement des commentaires.');
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          final comments = snapshot.data!.docs;
+
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Get.to(
+                                      () => CommentPage(movieId: movie.title));
+                                },
+                                child: Text("${comments.length} Commentaire(s)",
+                                    style: const TextStyle(
+                                        fontFamily: 'Varela',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                        color: Colors.black)),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Get.to(
+                                      () => CommentPage(movieId: movie.title));
+                                },
+                                child: const Text(
+                                  'Voir plus',
+                                  style: TextStyle(
                                     fontSize: 16.0,
-                                    color: Colors.black)),
-                            TextButton(
-                              onPressed: () {
-                                Get.to(() => CommentPage(movieId: movie.title));
-                              },
-                              child: Text(
-                                'Voir plus', // Le texte à afficher dans le bouton
-                                style: TextStyle(
-                                  fontSize: 16.0, // La taille du texte
-                                  fontWeight: FontWeight
-                                      .bold, // Le poids du texte (gras)
-                                  color: Colors.blue, // La couleur du texte
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            ],
+                          );
+                        },
+                      )),
                       const SizedBox(height: 30.0),
                       Text(
                         "Synopsis".toUpperCase(),
@@ -241,7 +266,6 @@ class MovieDetail extends StatelessWidget {
                           room: movie.room,
                           description: movie.description,
                           urlvideo: movie.video,
-                          //isFavorite: gleinfo.isFavorite,
                         )));
               },
             ),
@@ -253,7 +277,6 @@ class MovieDetail extends StatelessWidget {
             const EdgeInsets.only(right: 40, left: 40, top: 10, bottom: 10),
         height: 70,
         width: 60,
-        //color: Colors.amber,
         child: FloatingActionButton.extended(
           heroTag: 'btn1',
           extendedPadding: const EdgeInsets.all(33.0),

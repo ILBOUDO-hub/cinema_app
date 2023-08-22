@@ -57,7 +57,6 @@ class MoviesController extends GetxController {
         }
       }
     }
-
     movies.value = upcomingMovies;
   }
 
@@ -101,7 +100,6 @@ class MoviesController extends GetxController {
         }
       }
     }
-
     selectedMovies.value = comingMovies;
   }
 }

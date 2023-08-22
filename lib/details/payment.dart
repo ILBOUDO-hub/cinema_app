@@ -1,10 +1,13 @@
+import 'package:cinema/controllers/userController.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends StatefulWidget {
-  final int idMovies,idTicket, price, quantity;
+  final int idMovies, idTicket, price, quantity;
 
   PaymentDetail({
     required this.idMovies,
@@ -18,6 +21,7 @@ class PaymentDetail extends StatefulWidget {
 }
 
 class _PaymentDetailState extends State<PaymentDetail> {
+  final UserController userController = Get.find<UserController>();
   int montant = 0;
   TextEditingController otpController = TextEditingController();
 
@@ -54,6 +58,21 @@ class _PaymentDetailState extends State<PaymentDetail> {
         EasyLoading.dismiss();
         print("Paiement réussi");
         // Traitez la réussite du paiement ici
+        final CollectionReference bookingsRef =
+            FirebaseFirestore.instance.collection('booking');
+
+        int idTicket = widget.idTicket;
+        String phoneNumber = userController.user?.phoneNumber ?? 'Utilisateur non connecté';
+
+        bookingsRef.add({
+          'idTicket': idTicket,
+          'phone': phoneNumber,
+          // Autres champs de la réservation si nécessaire
+        }).then((DocumentReference document) {
+          print('Document ajouté avec l\'ID : ${document.id}');
+        }).catchError((error) {
+          print('Erreur lors de l\'ajout du document : $error');
+        });
       } else {
         EasyLoading.showError(
             "Code invalide, veuillez vérifier vos informations");
