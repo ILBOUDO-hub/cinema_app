@@ -1,4 +1,5 @@
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/controllers/detailsControllers/nouv_ticket.dart';
 import 'package:cinema/controllers/userController.dart';
 import 'package:cinema/profil.dart';
 import 'package:cinema/tickets.dart';
@@ -21,6 +22,7 @@ void main() async {
   Get.put(CommentController());
   Get.put(TicketsController());
   Get.put(UserController());
+  Get.put(NouveauController());
   runApp(MyApp());
 }
 
@@ -59,7 +61,7 @@ class HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     Welcome(),
     Calendar(),
-    Ticket(),
+    MesTicket(),
     Profil(),
   ];
 

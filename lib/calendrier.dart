@@ -1,6 +1,7 @@
+import 'package:cinema/details/movie_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:cinema/controllers/moviesTest.dart';
-import 'package:cinema/details/movie_detail.dart';
+
 import 'package:cinema/models/moviesTest.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';

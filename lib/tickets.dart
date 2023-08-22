@@ -2,12 +2,12 @@ import 'package:cinema/tickets/ancien.dart';
 import 'package:cinema/tickets/nouveau.dart';
 import 'package:flutter/material.dart';
 
-class Ticket extends StatefulWidget {
+class MesTicket extends StatefulWidget {
   @override
-  _TicketState createState() => _TicketState();
+  _MesTicketState createState() => _MesTicketState();
 }
 
-class _TicketState extends State<Ticket> with TickerProviderStateMixin {
+class _MesTicketState extends State<MesTicket> with TickerProviderStateMixin {
   List<String> categories = [
     'Mes tickets',
     'Historique',

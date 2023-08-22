@@ -159,7 +159,7 @@ class _TicketDetailState extends State<TicketDetail> {
                       final ticket = ticketsForSelectedDate[index];
                       return InkWell(
                         onTap: () {
-                            Get.to(() => PaymentDetail(idMovies : widget.movie.idMovies, price:ticket.price, quantity:_count));
+                            Get.to(() => PaymentDetail(idMovies : widget.movie.idMovies,idTicket:ticket.idMovies ,price:ticket.price, quantity:_count));
                         },
                         child: Card(
                           elevation: 1.0,

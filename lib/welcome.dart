@@ -50,7 +50,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
             children: <Widget>[
               const SizedBox(height: 15.0),
               Padding(
-                padding: EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -161,7 +161,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 height: 310,
                 child: Obx(() {
                   if (MoviesController.instance.isLoading.value) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else {
                     List<Movie> filteredMovies = [];
 
@@ -178,7 +178,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                     }
                     if (filteredMovies.isEmpty) {
                       // Aucun film disponible pour la catégorie sélectionnée
-                      return Center(
+                      return const  Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

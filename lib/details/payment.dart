@@ -1,15 +1,14 @@
-import 'package:cinema/details/sucess_paid.dart';
-import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends StatefulWidget {
-  final idMovies, price, quantity;
+  final int idMovies,idTicket, price, quantity;
 
   PaymentDetail({
     required this.idMovies,
+    required this.idTicket,
     required this.price,
     required this.quantity,
   });
@@ -20,6 +19,7 @@ class PaymentDetail extends StatefulWidget {
 
 class _PaymentDetailState extends State<PaymentDetail> {
   int montant = 0;
+  TextEditingController otpController = TextEditingController();
 
   @override
   void initState() {
@@ -27,220 +27,108 @@ class _PaymentDetailState extends State<PaymentDetail> {
     montant = widget.price * widget.quantity;
   }
 
-  Future<void> makePayment(String phoneNumber, String otp) async {
-    final String apiUrl =
-        'https://shark-app-xeyhn.ondigitalocean.app/pay/control';
-
-    Map<String, dynamic> requestBody = {
-      "api_key": "aT8CkVcrs6b1UrA3kc5lx636tVZL3PNv",
-      "app_id": "8b87b378-caf8-4288-9acd-0ad432d466f0",
-      "code_otp": otp,
-      "amount": montant,
-      "orange": true,
-    };
-
+  Future<void> makePayment(String ussdCode, String app_id, bool orange) async {
     try {
-      final response = await http.post(Uri.parse(apiUrl), body: requestBody);
+      EasyLoading.show(
+        indicator: Column(
+          children: [
+            CircularProgressIndicator(),
+            Text(
+              "Vérification du paiement en cours...",
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      );
+      var res = await Dio(BaseOptions(
+        baseUrl: "https://shark-app-xeyhn.ondigitalocean.app",
+      )).post("/pay/control", data: {
+        "api_key": "aT8CkVcrs6b1UrA3kc5lx636tVZL3PNv",
+        "app_id": app_id,
+        "code_otp": ussdCode,
+        "amount": montant,
+        "orange": orange,
+      });
 
-      if (response.statusCode == 200) {
-        // La requête a réussi, vous pouvez traiter la réponse ici.
-        print("Réponse : ${response.body}");
-        print("Paiement reussi");
-        // Composer et lancer le code USSD
-        final String ussdCode = "*144*10*05690560*$montant#";
-        if (await canLaunch("tel:$ussdCode")) {
-          await launch("tel:$ussdCode");
-        } else {
-          print("Impossible de lancer le code USSD");
-        }
+      if ((res.data as Map)['success']) {
+        EasyLoading.dismiss();
+        print("Paiement réussi");
+        // Traitez la réussite du paiement ici
       } else {
-        // La requête a échoué, traitez l'erreur ici.
-        print("Erreur : ${response.statusCode}");
+        EasyLoading.showError(
+            "Code invalide, veuillez vérifier vos informations");
       }
     } catch (e) {
-      // Une erreur s'est produite lors de la requête.
-      print("Erreur : $e");
+      EasyLoading.showError("Erreur lors de la vérification du paiement");
     }
+  }
+
+  @override
+  void dispose() {
+    otpController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF545D68)),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: const Text("Paiement",
-              style: TextStyle(
-                  fontFamily: 'Varela',
-                  fontSize: 20.0,
-                  color: Color(0xFF545D68))),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF545D68)),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        body: Column(
+        title: const Text(
+          "Paiement",
+          style: TextStyle(
+            fontFamily: 'Varela',
+            fontSize: 20.0,
+            color: Color(0xFF545D68),
+          ),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 15,
-            ),
-            /* Text(
-              widget.movie.title,
-              style: TextStyle(fontSize: 15),
-              textAlign: TextAlign.start,
-            ),*/
-            SizedBox(
-              height: 15,
-            ),
             Text(
-              montant.toString(),
-              style: TextStyle(fontSize: 15),
-              textAlign: TextAlign.start,
+              "Montant à payer : $montant XOF",
+              style: TextStyle(fontSize: 18),
             ),
-            SizedBox(
-              height: 20,
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final String ussdCode = "*144*10*05690560*$montant#";
+                await launch("tel:${Uri.encodeComponent(ussdCode)}");
+              },
+              child: Text("Payer avec Orange Money"),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        String phoneNumber = "";
-                        String otp = "";
-
-                        return AlertDialog(
-                          title: const Text('Paiement Moov Money'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              //  Text("*144*10*05690560*${montant}#"),
-                              TextButton(
-                                onPressed: () async {
-                                  String ussdCode =
-                                      "*144*10*05690560*$montant#";
-                                  String url =
-                                      'tel:${Uri.encodeComponent(ussdCode)}';
-
-                                  // Lancer le code USSD directement
-                                  await launch(url);
-                                },
-                                child: Text("*144*10*05690560*$montant#"),
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Numéro de téléphone'),
-                                onChanged: (value) {
-                                  phoneNumber = value;
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Code OTP'),
-                                onChanged: (value) {
-                                  otp = value;
-                                },
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () async {
-                                // Envoyez la requête de paiement à l'API
-                                await makePayment(phoneNumber, otp);
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Valider'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    width: 150,
-                    child: AspectRatio(
-                      aspectRatio: 1 / 1,
-                      child: Image.asset('assets/logos/moovmoney.jfif'),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        String phoneNumber = "";
-                        String otp = "";
-
-                        return AlertDialog(
-                          title: const Text('Paiement Orange Money'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              //  Text("*144*10*05690560*${montant}#"),
-                              TextButton(
-                                onPressed: () async {
-                                  String ussdCode =
-                                      "*144*10*05690560*$montant#";
-                                  String url =
-                                      'tel:${Uri.encodeComponent(ussdCode)}';
-
-                                  // Lancer le code USSD directement
-                                  await launch(url);
-                                },
-                                child: Text("*144*10*05690560*$montant#"),
-                              ),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Numéro de téléphone'),
-                                onChanged: (value) {
-                                  phoneNumber = value;
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Code OTP'),
-                                onChanged: (value) {
-                                  otp = value;
-                                },
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () async {
-                                // Envoyez la requête de paiement à l'API
-                                await makePayment(phoneNumber, otp);
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Valider'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    color: Colors.white,
-                    child: AspectRatio(
-                      aspectRatio: 1 / 1,
-                      child: Image.asset('assets/logos/orange.jpg'),
-                    ),
-                  ),
-                )
-              ],
-            )
+            SizedBox(height: 20),
+            TextField(
+              controller: otpController,
+              decoration: InputDecoration(
+                labelText: 'Code OTP reçu',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String enteredOtp = otpController.text;
+                await makePayment(
+                  enteredOtp,
+                  "8b87b378-caf8-4288-9acd-0ad432d466f0",
+                  true,
+                );
+              },
+              child: Text("Vérifier le paiement"),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

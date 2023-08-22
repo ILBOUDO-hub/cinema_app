@@ -1,4 +1,3 @@
-import 'package:cinema/models/movies.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -79,109 +78,7 @@ class _PaidState extends State<Paid> {
       ),
       body: Column(
         children: [
-          const SizedBox(
-            height: 15,
-          ),
-          /*Text(
-           // widget.movie.title,
-            style: const TextStyle(fontSize: 15),
-            textAlign: TextAlign.start,
-          ),*/
-          Text(
-            //"$montant",
-            montant.toString(),
-            style: const TextStyle(fontSize: 15),
-            textAlign: TextAlign.start,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              InkWell(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      String phoneNumber = "";
-                      String otp = "";
-
-                      return AlertDialog(
-                        title: const Text('Paiement Orange Money'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            //  Text("*144*10*05690560*${montant}#"),
-                            TextButton(
-                              onPressed: () async {
-                                String ussdCode = "*144*10*05690560*$montant#";
-                                String url =
-                                    'tel:${Uri.encodeComponent(ussdCode)}';
-
-                                // Lancer le code USSD directement
-                                await launch(url);
-                              },
-                              child: Text("*144*10*05690560*$montant#"),
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Numéro de téléphone'),
-                              onChanged: (value) {
-                                phoneNumber = value;
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            TextField(
-                              decoration:
-                                  const InputDecoration(labelText: 'Code OTP'),
-                              onChanged: (value) {
-                                otp = value;
-                              },
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              // Envoyez la requête de paiement à l'API
-                              await makePayment(phoneNumber, otp);
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Valider'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: Container(
-                  width: 150,
-                  height: 100,
-                  child: AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: Image.asset('assets/logos/orangemoney.jpg'),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                
-                    },
-                  
-                
-                child: Container(
-                  width: 150,
-                  height: 200,
-                  color: Colors.amber,
-                  child: AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: ClipRect(child: Image.asset('assets/logos/moovmoney.jpg')),
-                  ),
-                ),
-              ),
-            ],
-          )
+        Text("Paiement recu !")
         ],
       ),
     );
