@@ -1,9 +1,7 @@
-import 'package:cinema/home.dart';
 import 'package:cinema/login/user.dart';
 import 'package:cinema/sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'main.dart';

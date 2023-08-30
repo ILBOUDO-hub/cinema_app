@@ -8,12 +8,16 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PaymentDetail extends StatefulWidget {
   final int idMovies, idTicket, price, quantity;
+  final tickets;
+  final String movieName;
 
   PaymentDetail({
     required this.idMovies,
     required this.idTicket,
     required this.price,
     required this.quantity,
+    required this.tickets,
+    required this.movieName,
   });
 
   @override
@@ -34,7 +38,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
   Future<void> makePayment(String ussdCode, String app_id, bool orange) async {
     try {
       EasyLoading.show(
-        indicator: Column(
+        indicator: const Column(
           children: [
             CircularProgressIndicator(),
             Text(
@@ -62,7 +66,8 @@ class _PaymentDetailState extends State<PaymentDetail> {
             FirebaseFirestore.instance.collection('booking');
 
         int idTicket = widget.idTicket;
-        String phoneNumber = userController.user?.phoneNumber ?? 'Utilisateur non connecté';
+        String phoneNumber =
+            userController.user?.phoneNumber ?? 'Utilisateur non connecté';
 
         bookingsRef.add({
           'idTicket': idTicket,
@@ -111,41 +116,124 @@ class _PaymentDetailState extends State<PaymentDetail> {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Montant à payer : $montant XOF",
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final String ussdCode = "*144*10*05690560*$montant#";
-                await launch("tel:${Uri.encodeComponent(ussdCode)}");
-              },
-              child: Text("Payer avec Orange Money"),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: otpController,
-              decoration: InputDecoration(
-                labelText: 'Code OTP reçu',
-                border: OutlineInputBorder(),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                " Vous payer pour le ticket du film: ${widget.movieName}",
+                style: TextStyle(fontSize: 18),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                String enteredOtp = otpController.text;
-                await makePayment(
-                  enteredOtp,
-                  "8b87b378-caf8-4288-9acd-0ad432d466f0",
-                  true,
-                );
-              },
-              child: Text("Vérifier le paiement"),
-            ),
-          ],
+              Text(
+                "Montant à payer : $montant XOF",
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.lightBlue,
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    final String ussdCode = "*144*10*05690560*$montant#";
+                    await launch("tel:${Uri.encodeComponent(ussdCode)}");
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: const DecorationImage(
+                                  image: AssetImage(
+                                    'assets/logos/orange.png',
+                                  ),
+                                  fit: BoxFit.contain)),
+                        ),
+                      ),
+                      const Text(
+                        "Payer avec Orange Money",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.lightBlue,
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    final String ussdCode = "*144*10*05690560*$montant#";
+                    await launch("tel:${Uri.encodeComponent(ussdCode)}");
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: const DecorationImage(
+                                  image: AssetImage(
+                                    'assets/logos/moovmoney.jfif',
+                                  ),
+                                  fit: BoxFit.contain)),
+                        ),
+                      ),
+                      const Text(
+                        "Payer avec Moov Money",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: otpController,
+                decoration: const InputDecoration(
+                  labelText: 'Code OTP reçu',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    String enteredOtp = otpController.text;
+                    await makePayment(
+                      enteredOtp,
+                      "8b87b378-caf8-4288-9acd-0ad432d466f0",
+                      true,
+                    );
+                  },
+                  child: const Text(
+                    "Effectuer le paiement",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

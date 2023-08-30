@@ -129,12 +129,12 @@ class _TicketDetailState extends State<TicketDetail> {
                 ),
                 if (ticketsForSelectedDate
                     .isEmpty) // Check if the list is empty
-                  Center(
+                  const Center(
                     // Display an icon and message if the list is empty
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.movie,
                           size: 60,
                           color: Colors.grey,
@@ -159,7 +159,7 @@ class _TicketDetailState extends State<TicketDetail> {
                       final ticket = ticketsForSelectedDate[index];
                       return InkWell(
                         onTap: () {
-                            Get.to(() => PaymentDetail(idMovies : widget.movie.idMovies,idTicket:ticket.idMovies ,price:ticket.price, quantity:_count));
+                            Get.to(() => PaymentDetail(idMovies : widget.movie.idMovies,movieName:widget.movie.title,idTicket:ticket.idMovies ,price:ticket.price,tickets: ticket, quantity:_count));
                         },
                         child: Card(
                           elevation: 1.0,

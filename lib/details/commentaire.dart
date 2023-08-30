@@ -14,7 +14,6 @@ class CommentPage extends StatefulWidget {
 
 class _CommentPageState extends State<CommentPage> {
   final UserController userController = Get.find<UserController>();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   final CollectionReference commentsCollection =
       FirebaseFirestore.instance.collection('comments');
@@ -68,10 +67,13 @@ class _CommentPageState extends State<CommentPage> {
                       final name = comment['name'] ?? '';
                       final message = comment['message'] ?? '';
                       return ListTile(
-                        subtitle: Text(message,style: const TextStyle(
+                        subtitle: Text(
+                          message,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                          ),),
+                          ),
+                        ),
                         title: Text(
                           name,
                           style: const TextStyle(

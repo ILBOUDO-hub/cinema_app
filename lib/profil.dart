@@ -50,13 +50,13 @@ class _ProfilSate extends State<Profil> {
                 const SizedBox(height: 15),
                 Column(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 65.0,
                       backgroundImage: AssetImage(
                         'assets/images/perso.jfif',
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                  /*   Text(
                        userController.user?.firstname ?? '',
                      // 'Auguste ILBOUDO',
@@ -175,7 +175,7 @@ class _ProfilSate extends State<Profil> {
                     });*/
                   },
                 ),
-                ListTile(
+                /*ListTile(
                   leading: const Icon(Icons.dashboard, color: Colors.black),
                   title: const Text('Mes favoris',
                       style: TextStyle(fontSize: 18.0, color: Colors.black)),
@@ -188,7 +188,7 @@ class _ProfilSate extends State<Profil> {
                       }));
                     });
                   },
-                ),
+                ),*/
                 ListTile(
                   leading: const Icon(Icons.privacy_tip, color: Colors.black),
                   title: const Text('Termes et Conditions',

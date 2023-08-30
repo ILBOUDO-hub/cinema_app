@@ -66,7 +66,7 @@ class _VerificationOtpState extends State<VerificationOtp> {
   void onVerifySmsCode() async {
     loading = true;
     setState(() {});
-    await validateOtp(smsCode, widget.verificationId,widget.phoneNumber);
+    await validateOtp(smsCode, widget.verificationId, widget.phoneNumber);
     loading = false; // Mettez à jour l'état du chargement après la vérification
     setState(() {});
     print("Vérification effectuée avec succès");
@@ -84,6 +84,16 @@ class _VerificationOtpState extends State<VerificationOtp> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
+                Container(
+                  height: 300,
+                  width: 300,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                            'assets/images/cine.jpg',
+                          ),
+                          fit: BoxFit.cover)),
+                ),
                 const Text(
                   "Vérification Otp",
                   style: TextStyle(
