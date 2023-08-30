@@ -117,7 +117,7 @@ class _MesTicketState extends State<MesTicket> with TickerProviderStateMixin {
                       //liste des widgets pour chaque page de categorie
                       //Boutique(),
 
-                      Nouveau(),
+                      BookingPage(),
                       Ancien(),
                     ])),
 

@@ -1,52 +1,66 @@
 import 'package:cinema/controllers/userController.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NouveauController extends GetxController {
-  final UserController userController = Get.find<UserController>();
-  final CollectionReference bookingRef =
+class BookingController {
+  final CollectionReference _bookingCollection =
       FirebaseFirestore.instance.collection('booking');
-  final CollectionReference ticketRef =
-      FirebaseFirestore.instance.collection('tickets');
 
-  Rx<List<Ticket>> userTickets = Rx<List<Ticket>>([]);
+  final UserController userController = Get.find<UserController>();
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchUserTickets();
-  }
+  Future<List<DocumentSnapshot>> getUserBookings() async {
+    try {
+      String userPhoneNumber = userController.user?.phoneNumber ?? 'Utilisateur non connecté';
+      
+      QuerySnapshot querySnapshot = await _bookingCollection
+          .where('phone', isEqualTo: userPhoneNumber)
+          .get();
 
-  Future<void> fetchUserTickets() async {
-    final currentUser = userController.user?.phoneNumber;
-    if (currentUser != null) {
-      final bookingsSnapshot =
-          await bookingRef.where('phone', isEqualTo: currentUser).get();
+      DateTime now = DateTime.now();
+      List<DocumentSnapshot> validBookings = [];
 
-      final bookingDocs = bookingsSnapshot.docs;
+      for (DocumentSnapshot bookingSnapshot in querySnapshot.docs) {
+        Map<String, dynamic> bookingData = bookingSnapshot.data() as Map<String, dynamic>;
+        DateTime movieDate = bookingData['movieDate'].toDate();
 
-      if (bookingDocs.isNotEmpty) {
-        final userTicketIds = bookingDocs[0]['idTicket'] as List<dynamic>;
-
-        final userTicketsData = await Future.wait(
-          userTicketIds.map((ticketId) async {
-            final ticketSnapshot = await ticketRef.doc(ticketId).get();
-            if (ticketSnapshot.exists) {
-              return Ticket.fromMap(
-                  ticketSnapshot.data() as Map<String, dynamic>);
-            }
-            return null;
-          }),
-        );
-        userTickets.value = userTicketsData
-            .where((ticket) => ticket != null)
-            .toList()
-            .cast<Ticket>();
+        if (movieDate.isAfter(now)) {
+          validBookings.add(bookingSnapshot);
+        }
       }
+
+      return validBookings;
+    } catch (e) {
+      print('Erreur lors de la récupération des réservations : $e');
+      return [];
     }
   }
 }
 
+/*class BookingController {
+  final CollectionReference _bookingCollection =
+      FirebaseFirestore.instance.collection('booking');
+
+  final UserController userController = Get.find<UserController>();
+
+  Future<List<DocumentSnapshot>> getValidBookings() async {
+    try {
+      String userPhoneNumber = userController.user?.phoneNumber ?? 'Utilisateur non connecté';
+      DateTime now = DateTime.now();
+      QuerySnapshot querySnapshot = await _bookingCollection
+          .where('phone', isEqualTo: userPhoneNumber)
+          .where('movieDate', isGreaterThanOrEqualTo: now)
+          .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      print('Erreur lors de la récupération des réservations : $e');
+      return [];
+    }
+  }
+}*/
+
+/*
 class Ticket {
   final String idMovies;
   final String phone;
@@ -72,3 +86,4 @@ class Ticket {
     );
   }
 }
+*/

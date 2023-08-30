@@ -2,119 +2,93 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/controllers/detailsControllers/nouv_ticket.dart';
 import 'package:cinema/controllers/moviesTest.dart';
 import 'package:cinema/models/moviesTest.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
+import 'package:ticket_material/ticket_material.dart';
 import 'package:get/get.dart';
 
-class Nouveau extends StatelessWidget {
-  final NouveauController nouveauController = Get.find<NouveauController>();
-  final MoviesController moviesController = Get.find<MoviesController>();
+import '../details/qrcode_page.dart';
+
+class BookingPage extends StatelessWidget {
+  final BookingController bookingController = BookingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFCFAF8),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 100.0),
-            Obx(() {
-              final userTickets = nouveauController.userTickets.value; // Accédez aux données à l'intérieur de l'observable
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: userTickets.length, // Utilisez la variable userTickets
-                itemBuilder: (BuildContext context, int index) {
-                  final ticket = userTickets[index]; // Utilisez la variable userTickets
-                  final associatedMovie = moviesController.movies.firstWhere(
-                    (movie) => movie.idMovies == ticket.idMovies,
-                    /*  orElse: () => Movie(
-                            idMovies: "",
-                            title: "Film non trouvé",
-                            image: "lien_de_l'image_du_film_non_trouvé"),*/
-                  );
+      appBar: AppBar(
+        title: Text('Mes Réservations'),
+      ),
+      body: FutureBuilder<List<DocumentSnapshot>>(
+        future: bookingController.getUserBookings(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Attente pendant le chargement
+          } else if (snapshot.hasError) {
+            return Text('Erreur : ${snapshot.error}');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Text('Aucune réservation valide.');
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot bookingSnapshot = snapshot.data![index];
+                Map<String, dynamic> bookingData =
+                    bookingSnapshot.data() as Map<String, dynamic>;
 
-                  return InkWell(
-                    onTap: () {
-                      // TODO: Naviguer vers la page de détails du ticket
-                    },
-                    child: Card(
-                      elevation: 1.0,
-                      child: Row(
+                String userId = bookingData['phone'];
+                int ticketId = bookingData['idTicket'];
+                String movieTitle = bookingData['title'];
+                String movieImage = bookingData['image'];
+                Timestamp movieDateTimestamp = bookingData['movieDate'];
+                DateTime movieDate = movieDateTimestamp
+                    .toDate(); // Convertit le Timestamp en DateTime
+
+                String formattedDate = DateFormat('dd MMM yyyy - HH:mm')
+                    .format(movieDate); // Formate la date
+
+                return InkWell(
+                  onDoubleTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            QRCodePage(userId: userId, ticketId: ticketId,qrImage: movieImage,),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TicketMaterial(
+                      height: 150,
+                      colorBackground: Colors.white,
+                      leftChild: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 120,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl: associatedMovie.image,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    const SpinKitCircle(
-                                  color: Colors.blue,
-                                  size: 50.0,
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                associatedMovie.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Prix: ${ticket.time}",
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blueAccent,
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.watch_later_outlined),
-                                      Text(
-                                        ticket.time.toString(),
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          Text(movieTitle),
+                          Text('Date : $formattedDate'),
                         ],
                       ),
+                      rightChild: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                            image: CachedNetworkImageProvider(movieImage),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                  );
-                },
-              );
-            }),
-            const SizedBox(height: 20.0),
-          ],
-        ),
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }

@@ -22,7 +22,7 @@ void main() async {
   Get.put(CommentController());
   Get.put(TicketsController());
   Get.put(UserController());
-  Get.put(NouveauController());
+  Get.put(BookingController());
   runApp(MyApp());
 }
 
