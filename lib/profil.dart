@@ -1,8 +1,10 @@
+import 'package:cinema/controllers/detailsControllers/ancien.dart';
 import 'package:cinema/controllers/userController.dart';
 import 'package:cinema/function.dart';
 import 'package:cinema/parametres/assistance.dart';
 import 'package:cinema/parametres/favoris.dart';
 import 'package:cinema/parametres/politique.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cinema/models/users.dart';
@@ -13,7 +15,9 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilSate extends State<Profil> {
-   final UserController userController = Get.find<UserController>();
+  final UserController userController = Get.find<UserController>();
+  final ExpiredBookingController expiredController =
+      Get.find<ExpiredBookingController>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,7 +61,7 @@ class _ProfilSate extends State<Profil> {
                       ),
                     ),
                     const SizedBox(height: 20.0),
-                 /*   Text(
+                    /*   Text(
                        userController.user?.firstname ?? '',
                      // 'Auguste ILBOUDO',
                       // "${(user?.phoneNumber ?? "")}",
@@ -68,26 +72,27 @@ class _ProfilSate extends State<Profil> {
                       ),
                     ),*/
                     Obx(() {
-  return Text(
-    userController.user?.firstName ?? 'Utilisateur non connecté',
-    style: TextStyle(
-      color: Colors.black,
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold,
-    ),
-  );
-}),
+                      return Text(
+                        userController.user?.firstName ??
+                            'Utilisateur non connecté',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }),
                     Obx(() {
-  return Text(
-    userController.user?.phoneNumber ?? 'Utilisateur non connecté',
-    style: TextStyle(
-      color: Colors.black,
-      fontSize: 16.0,
-      fontWeight: FontWeight.bold,
-    ),
-  );
-}),
-
+                      return Text(
+                        userController.user?.phoneNumber ??
+                            'Utilisateur non connecté',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -96,51 +101,76 @@ class _ProfilSate extends State<Profil> {
                 Padding(
                   padding: const EdgeInsets.only(right: 12.0, left: 8.0),
                   child: Card(
+                    //Code pour afficher les tickets valides
                       child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        Container(
+                            child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('booking')
+                              .where('phone',
+                                  isEqualTo: userController.user?.phoneNumber ??
+                                      'Utilisateur non connecté')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text(
+                                  'Erreur de chargement des commentaires.');
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+
+                            final tickets = snapshot.data!.docs;
+
+                            return Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  //  color: Colors.orangeAccent,
+                                  child: Text("${tickets.length}",
+                                      style: TextStyle(fontSize: 20)),
+                                ),
+                                const Text(
+                                  'Ticket(s)',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        )),
                         Column(
                           children: [
                             Container(
+                              //Code pour les afficher les anciens tickets
                               padding: EdgeInsets.all(10),
-                              //  color: Colors.orangeAccent,
-                              child: Text("03", style: TextStyle(fontSize: 20)),
-                            ),
-                            const Text(
-                              'Favoris',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
+                              child: FutureBuilder<List<DocumentSnapshot>>(
+                                future: expiredController.getUserBookings(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Erreur : ${snapshot.error}');
+                                  } else {
+                                    int numberOfParticipations =
+                                        snapshot.data?.length ?? 0;
+                                    return Text(
+                                      '$numberOfParticipations',
+                                      style: const TextStyle(fontSize: 20),
+                                    );
+                                  }
+                                },
                               ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              //  color: Colors.orangeAccent,
-                              child: Text("02", style: TextStyle(fontSize: 20)),
-                            ),
-                            const Text(
-                              'Ticket(s)',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              // color: Colors.orangeAccent,
-                              child: Text("00", style: TextStyle(fontSize: 20)),
                             ),
                             const Text(
                               'Participation(s)',
@@ -150,6 +180,20 @@ class _ProfilSate extends State<Profil> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            /* Container(
+                              padding: EdgeInsets.all(10),
+                              // color: Colors.orangeAccent,
+                              child: Text("00",         
+                           style: TextStyle(fontSize: 20)),
+                            ),
+                            const Text(
+                              'Participation(s)',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),*/
                           ],
                         ),
                       ],

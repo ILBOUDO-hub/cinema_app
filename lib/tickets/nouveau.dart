@@ -1,14 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/controllers/detailsControllers/nouv_ticket.dart';
-import 'package:cinema/controllers/moviesTest.dart';
-import 'package:cinema/models/moviesTest.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:ticket_material/ticket_material.dart';
-import 'package:get/get.dart';
-
 import '../details/qrcode_page.dart';
 
 class BookingPage extends StatelessWidget {
@@ -28,7 +23,36 @@ class BookingPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text('Erreur : ${snapshot.error}');
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Text('Aucune réservation valide.');
+            // return Text('Aucune réservation valide.');
+            return Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 100.0),
+                  Container(
+                    height: 120.0,
+                    width: 120.0,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/tickets.png',
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  const Text(
+                    "Vous n'avez pas de tickets expirés !",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
@@ -53,8 +77,11 @@ class BookingPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            QRCodePage(userId: userId, ticketId: ticketId,qrImage: movieImage,),
+                        builder: (context) => QRCodePage(
+                          userId: userId,
+                          ticketId: ticketId,
+                          qrImage: movieImage,
+                        ),
                       ),
                     );
                   },

@@ -1,4 +1,5 @@
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/controllers/detailsControllers/ancien.dart';
 import 'package:cinema/controllers/detailsControllers/nouv_ticket.dart';
 import 'package:cinema/controllers/userController.dart';
 import 'package:cinema/profil.dart';
@@ -23,6 +24,7 @@ void main() async {
   Get.put(TicketsController());
   Get.put(UserController());
   Get.put(BookingController());
+  Get.put(ExpiredBookingController());
   runApp(MyApp());
 }
 

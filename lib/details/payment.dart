@@ -199,7 +199,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
                 ),
                 child: InkWell(
                   onTap: () async {
-                    final String ussdCode = "*144*10*05690560*$montant#";
+                    final String ussdCode = "*555*4*1*03301404*$montant#";
                     await launch("tel:${Uri.encodeComponent(ussdCode)}");
                   },
                   child: Row(
@@ -246,7 +246,8 @@ class _PaymentDetailState extends State<PaymentDetail> {
                     String enteredOtp = otpController.text;
                     await makePayment(
                       enteredOtp,
-                      "8b87b378-caf8-4288-9acd-0ad432d466f0",
+                      //"8b87b378-caf8-4288-9acd-0ad432d466f0",
+                      "7048bfa7-831b-4117-b31d-77df3c6b8f69",
                       true,
                     );
                   },

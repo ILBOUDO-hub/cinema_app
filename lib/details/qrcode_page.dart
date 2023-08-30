@@ -17,7 +17,7 @@ class QRCodePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Code QR du Ticket'),
+        title: const Text('Code QR du Ticket'),
         centerTitle: true,
       ),
       body: Column(
@@ -28,22 +28,16 @@ class QRCodePage extends StatelessWidget {
             children: [
               CachedNetworkImage(
                 imageUrl: qrImage,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),  fit: BoxFit.cover
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),  fit: BoxFit.cover
               ),
               Container( color: Colors.white,padding: const EdgeInsets.all(10.0),
-                /*decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 4.0,
-                  ),
-                ),*/
                 child: QrImageView(
                   data: 'UserId: $userId\nTicketId: $ticketId',
                   version: QrVersions.auto,
                   size: 250,
                   gapless: false,
-                  embeddedImageStyle: QrEmbeddedImageStyle(
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
                     size: Size(80, 80),
                   ),
                 ),
