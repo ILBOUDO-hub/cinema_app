@@ -43,7 +43,7 @@ class BookingPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0),
                   const Text(
-                    "Vous n'avez pas de tickets expirés !",
+                    "Vous n'avez pas de nouveaux tickets !",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18.0,

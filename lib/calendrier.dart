@@ -57,6 +57,7 @@ class _CalendarState extends State<Calendar> {
         elevation: 2,
         title: const Text("CinePlus"),
         centerTitle: false,
+        automaticallyImplyLeading: false,
         titleTextStyle: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,

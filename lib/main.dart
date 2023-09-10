@@ -1,4 +1,5 @@
 import 'package:cinema/calendrier.dart';
+import 'package:cinema/controllers/calendrierController.dart';
 import 'package:cinema/controllers/detailsControllers/ancien.dart';
 import 'package:cinema/controllers/detailsControllers/nouv_ticket.dart';
 import 'package:cinema/controllers/userController.dart';
@@ -15,6 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'controllers/moviesTest.dart';
 import 'package:cinema/controllers/commentController.dart';
 import 'controllers/ticketController.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +28,8 @@ void main() async {
   Get.put(UserController());
   Get.put(BookingController());
   Get.put(ExpiredBookingController());
+  Get.put(CalendrierController());
+  EasyLoading.init(); // Initialisez EasyLoading ici.
   runApp(MyApp());
 }
 
@@ -41,6 +46,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      builder: EasyLoading.init(), // Placez cette ligne dans le builder.
       home: StreamBuilder<User?>(
         stream: _auth.authStateChanges(),
         builder: (context, snapshot) {

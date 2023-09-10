@@ -84,7 +84,7 @@ class _SignInViewState extends State<SignInView> {
                             height: 10,
                           ),
                           Text(
-                            "Bienvenue sur E-cinema",
+                            "Bienvenue sur CinePlus",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,

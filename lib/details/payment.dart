@@ -64,16 +64,23 @@ class _PaymentDetailState extends State<PaymentDetail> {
         ),
       );
       var res = await Dio(BaseOptions(
-        baseUrl: "https://shark-app-xeyhn.ondigitalocean.app",
-      )).post("/pay/control", data: {
+              baseUrl: "https://shark-app-xeyhn.ondigitalocean.app"))
+          .post("/pay/control", data: {
         "api_key": "aT8CkVcrs6b1UrA3kc5lx636tVZL3PNv",
+        // "api_key": " 8b87b378-caf8-4288-9acd-0ad432d466f0",
         "app_id": app_id,
         "code_otp": ussdCode,
         "amount": montant,
         "orange": orange,
       });
 
+      print("Réponse du serveur : ${res.data}");
+
       if ((res.data as Map)['success']) {
+        // ...
+        // Votre code en cas de paiement réussi
+        // ...
+
         EasyLoading.dismiss();
         print("Paiement réussi");
         // Traitez la réussite du paiement ici
@@ -98,16 +105,37 @@ class _PaymentDetailState extends State<PaymentDetail> {
         }).catchError((error) {
           print('Erreur lors de l\'ajout du document : $error');
         });
-       /* _showQRCodePage(
+        /* _showQRCodePage(
             context,
             userController.user?.phoneNumber ?? 'Utilisateur non connecté',
             widget.idTicket);*/
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Paiement'),
+              content: const Text('Votre paiement est reussi'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       } else {
         EasyLoading.showError(
             "Code invalide, veuillez vérifier vos informations");
+        print("Erreur lors de la vérification du paiement : Code invalide");
       }
     } catch (e) {
       EasyLoading.showError("Erreur lors de la vérification du paiement");
+      print("Erreur lors de la vérification du paiement : $e");
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
@@ -139,12 +167,15 @@ class _PaymentDetailState extends State<PaymentDetail> {
           ),
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(
+                height: 20,
+              ),
               Text(
                 " Vous payer pour le ticket du film: ${widget.movieName}",
                 style: TextStyle(fontSize: 18),
@@ -246,8 +277,8 @@ class _PaymentDetailState extends State<PaymentDetail> {
                     String enteredOtp = otpController.text;
                     await makePayment(
                       enteredOtp,
-                      //"8b87b378-caf8-4288-9acd-0ad432d466f0",
-                      "7048bfa7-831b-4117-b31d-77df3c6b8f69",
+                      "8b87b378-caf8-4288-9acd-0ad432d466f0",
+                     // "7048bfa7-831b-4117-b31d-77df3c6b8f69",
                       true,
                     );
                   },
@@ -256,6 +287,9 @@ class _PaymentDetailState extends State<PaymentDetail> {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
             ],
           ),

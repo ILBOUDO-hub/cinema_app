@@ -23,6 +23,7 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   final UserController userController = Get.find<UserController>();
+    MoviesController moviesController = MoviesController.instance;
 
   List<String> categories = [
     'Recommandé',
@@ -312,7 +313,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      "A venir...",
+                      "Tendances en ce moment...",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -330,6 +331,68 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                   ],
                 ),
               ),
+              Container(
+                child:  ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: moviesController.selectedMovies.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Movie movie = moviesController.selectedMovies[index];
+                        return InkWell(
+                          onTap: () {
+                            Get.to(() => MovieDetail(movie: movie));
+                          },
+                          child: Card(
+                            elevation: 1.0,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      image: DecorationImage(
+                                        image: NetworkImage(movie.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movie.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      movie.category.toString(),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      movie.room,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+              )
               /*Container(
                 height: 310,
                 child: ListView.builder(
