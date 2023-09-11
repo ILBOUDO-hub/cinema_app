@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cinema/controllers/userController.dart';
+import 'package:cinema/search.dart';
 import 'package:get/get.dart';
 
 import 'controllers/moviesTest.dart';
@@ -7,6 +8,7 @@ import 'models/moviesTest.dart';
 import 'package:flutter/material.dart';
 
 import 'details/movie_detail.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Welcome extends StatefulWidget {
   List<String> _items = [
@@ -23,7 +25,7 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
   final UserController userController = Get.find<UserController>();
-    MoviesController moviesController = MoviesController.instance;
+  MoviesController moviesController = MoviesController.instance;
 
   List<String> categories = [
     'Recommandé',
@@ -96,7 +98,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         child: TextField(
                           //controller: _searchController,
                           decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.search),
+                            //prefixIcon: Icon(Icons.search),
                             border: InputBorder.none,
                             hintText: 'Rechercher',
                             contentPadding: EdgeInsets.symmetric(
@@ -107,6 +109,17 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       IconButton(
+                        color: Colors.black,
+                        iconSize: 30,
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                                                Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return SearchPage();
+                      }));
+                        },
+                      ),
+                      /*IconButton(
                         icon: const Icon(
                           Icons.filter_list,
                           // size: 35,
@@ -114,7 +127,7 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                         onPressed: () {
                           _showDropdown(context);
                         },
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -164,7 +177,13 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 height: 310,
                 child: Obx(() {
                   if (MoviesController.instance.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
+                    // return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: SpinKitFadingCircle(
+                        color: Colors.blue,
+                        size: 50.0,
+                      ),
+                    );
                   } else {
                     List<Movie> filteredMovies = [];
 
@@ -332,66 +351,66 @@ class _WelcomeState extends State<Welcome> with SingleTickerProviderStateMixin {
                 ),
               ),
               Container(
-                child:  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: moviesController.selectedMovies.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        Movie movie = moviesController.selectedMovies[index];
-                        return InkWell(
-                          onTap: () {
-                            Get.to(() => MovieDetail(movie: movie));
-                          },
-                          child: Card(
-                            elevation: 1.0,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      image: DecorationImage(
-                                        image: NetworkImage(movie.image),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: moviesController.selectedMovies.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Movie movie = moviesController.selectedMovies[index];
+                    return InkWell(
+                      onTap: () {
+                        Get.to(() => MovieDetail(movie: movie));
+                      },
+                      child: Card(
+                        elevation: 1.0,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                    image: NetworkImage(movie.image),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      movie.title,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      movie.category.toString(),
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      movie.room,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                  ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  movie.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  movie.category.toString(),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  movie.room,
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               )
               /*Container(
                 height: 310,

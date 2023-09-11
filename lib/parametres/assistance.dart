@@ -107,10 +107,10 @@ class _AssistanceState extends State<Assistance> {
                   MaterialPageRoute(builder: (BuildContext context) {
                   return MyApp();
                 })); */
-                           _lauchWhatsapp();
+                          _lauchWhatsapp();
                         },
                       ),
-                    const  FloatingActionButton.extended(
+                      const FloatingActionButton.extended(
                           heroTag: 'btn2',
                           extendedPadding: EdgeInsets.all(30.0),
                           label: Text(
@@ -148,7 +148,7 @@ class _AssistanceState extends State<Assistance> {
                   ),
                   backgroundColor: Colors.white,
                   onPressed: () {
-                     _lauchWhatsapp();
+                    _lauchWhatsapp();
                   },
                 ),
                 const SizedBox(
@@ -170,7 +170,6 @@ class _AssistanceState extends State<Assistance> {
   }
 }
 
-
 _makingPhoneCall() async {
   const url = 'tel:+22662825040';
   if (await canLaunch(url)) {
@@ -182,8 +181,8 @@ _makingPhoneCall() async {
 
 _lauchWhatsapp() async {
   final link = WhatsAppUnilink(
-    phoneNumber: '+22662825040',
-    text: "Je vous écrit car j'ai un soucis avec mon compte.Pouvez-vous m'aider à le resoudre s'il vous plait !"
-  );
+      phoneNumber: '+22662825040',
+      text:
+          "Je vous écrit car j'ai un soucis avec mon compte.Pouvez-vous m'aider à le resoudre s'il vous plait !");
   await launch('$link');
 }

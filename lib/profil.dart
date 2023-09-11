@@ -4,6 +4,7 @@ import 'package:cinema/function.dart';
 import 'package:cinema/parametres/assistance.dart';
 import 'package:cinema/parametres/favoris.dart';
 import 'package:cinema/parametres/politique.dart';
+import 'package:cinema/parametres/scanner.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -101,7 +102,7 @@ class _ProfilSate extends State<Profil> {
                 Padding(
                   padding: const EdgeInsets.only(right: 12.0, left: 8.0),
                   child: Card(
-                    //Code pour afficher les tickets valides
+                      //Code pour afficher les tickets valides
                       child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
@@ -210,13 +211,12 @@ class _ProfilSate extends State<Profil> {
                     style: TextStyle(fontSize: 18.0, color: Colors.black),
                   ),
                   onTap: () {
-                    // Do something
-                    /* setState(() {
+                    setState(() {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
-                        return Accueil();
+                        return QRScannerPage();
                       }));
-                    });*/
+                    });
                   },
                 ),
                 /*ListTile(

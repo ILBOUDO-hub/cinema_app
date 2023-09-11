@@ -8,7 +8,7 @@ class MoviesController extends GetxController {
   RxList<Movie> selectedMovies = RxList<Movie>();
   static MoviesController instance = Get.find();
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  final RxBool isLoading = false.obs;
+  final RxBool isLoading = true.obs;
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -42,6 +42,7 @@ class MoviesController extends GetxController {
           final videoRef = _storage.ref(movie.video);
 
           try {
+            //isLoading.value = true; // Début du chargement
             final imageDownloadURL = await imageRef.getDownloadURL();
             final videoDownloadURL = await videoRef.getDownloadURL();
 
@@ -53,6 +54,8 @@ class MoviesController extends GetxController {
           } catch (error) {
             print(
                 'Erreur lors du téléchargement de l\'image ou de la vidéo : $error');
+          } finally {
+            isLoading.value = false; // Fin du chargement
           }
         }
       }
@@ -83,19 +86,21 @@ class MoviesController extends GetxController {
             ticket.dateFin.isAfter(selectedDate)) {
           final imageRef = _storage.ref(movie.image);
           final videoRef = _storage.ref(movie.video);
-
+          isLoading.value = true; // Fin du chargement
           try {
+           
             final imageDownloadURL = await imageRef.getDownloadURL();
             final videoDownloadURL = await videoRef.getDownloadURL();
 
             // Mettre à jour les URLs de l'image et de la vidéo dans l'objet Movie avec les URLs absolues
             movie.image = imageDownloadURL;
             movie.video = videoDownloadURL;
-
             comingMovies.add(movie);
           } catch (error) {
             print(
                 'Erreur lors du téléchargement de l\'image ou de la vidéo : $error');
+          } finally {
+            isLoading.value = false; // Fin du chargement
           }
         }
       }
